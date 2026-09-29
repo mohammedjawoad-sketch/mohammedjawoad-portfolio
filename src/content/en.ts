@@ -164,7 +164,7 @@ export const en: Content = {
   projects: {
     title: 'Seven applications for one group',
     intro:
-      'Built for Al Rafidain Group companies on SAP Business One. Each one replaced a manual step or a legacy report.',
+      'Built for Al-Rafidain Group companies on SAP Business One. Each one replaced a manual step or a legacy report.',
     resultsLabel: 'Results',
     stackLabel: 'Built with',
     flowLabel: 'How it connects',
@@ -268,23 +268,23 @@ export const en: Content = {
     intro: 'Eight years across ERP consulting, development and the infrastructure underneath.',
     roles: [
       {
-        company: 'Al Rafidain Group',
+        company: 'Al-Rafidain Group',
         place: 'Baghdad, Iraq',
-        period: 'Mar 2023 – Present',
+        period: 'Mar 2023 – Sep 2026',
         title: 'SAP Business One Consultant and Group Systems Administrator',
         context:
           'A multi-company group in pharmaceuticals, airport transport, car rental and family entertainment, running SAP Business One on HANA across more than seven companies.',
         points: [
-          'Lead SAP Business One consulting across finance, procurement, sales, inventory and production, from requirements and solution design through configuration, UAT, go-live and training.',
-          'Enforce data quality with Transaction Notification controls, approval procedures, stored procedures, user-defined fields and custom Crystal and SQL reports.',
           'Designed and built seven SAP-integrated web applications for group finance, operations and leadership, replacing legacy reports and manual approvals.',
-          "Run the group's portals in production on Windows Server with Caddy, Cloudflare Tunnel, TLS, watchdogs and health checks, plus backup and disaster recovery.",
+          'Led SAP Business One consulting across finance, procurement, sales, inventory and production, from requirements and solution design through configuration, UAT, go-live and training.',
+          'Enforced data quality with Transaction Notification controls, approval procedures, stored procedures, user-defined fields and custom Crystal and SQL reports.',
+          "Ran the group's portals in production on Windows Server with Caddy, Cloudflare Tunnel, TLS, watchdogs and health checks, plus backup and disaster recovery.",
         ],
       },
       {
-        company: 'Al Qalab',
+        company: 'Al-Qalab',
         place: 'Iraq',
-        period: 'Jan 2022 – Feb 2023',
+        period: 'Jan 2022 – Mar 2023',
         title: 'ERPNext Functional and Technical Consultant',
         points: [
           'Implemented and optimized ERPNext across accounting, buying, selling, stock and manufacturing.',
@@ -293,9 +293,9 @@ export const en: Content = {
         ],
       },
       {
-        company: 'Netgate',
-        place: 'Iraq',
-        period: 'May 2018 – Dec 2021',
+        company: 'NetGate-Iraq',
+        place: 'Baghdad, Iraq',
+        period: 'Jun 2018 – Jan 2022',
         title: 'Senior System Administrator',
         points: [
           'Administered Windows and Linux servers, virtualization and networks, with monitoring, backup and recovery.',
@@ -314,13 +314,13 @@ export const en: Content = {
   about: {
     title: 'About me',
     paragraphs: [
-      "I'm an ERP consultant and developer based in Baghdad. I started out running servers and networks, moved into ERPNext implementation, and now lead SAP Business One for a group running more than seven companies on it.",
+      "I'm an ERP consultant and developer based in Baghdad. I started out running servers and networks, moved into ERPNext implementation, and then led SAP Business One for a group running more than seven companies on it.",
       "Clients get both sides from one person: enough finance, procurement and inventory knowledge to design the process, and the engineering to build what the standard system doesn't do.",
       "It's fitting work for someone from Iraq. The oldest written records we have, pressed into clay in southern Mesopotamia more than 5,000 years ago, are accounts.",
     ],
     facts: [
       { label: 'Based in', value: 'Baghdad, Iraq' },
-      { label: 'Languages', value: 'Arabic (native), English (fluent)' },
+      { label: 'Languages', value: 'Arabic (native), English (professional working proficiency)' },
       { label: 'Education', value: 'B.Sc. Computer Engineering, Al-Mustansiriyah University' },
       { label: 'Works', value: 'On-site in Iraq and remotely' },
     ],
