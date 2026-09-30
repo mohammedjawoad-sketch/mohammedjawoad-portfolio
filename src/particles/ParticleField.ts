@@ -6,6 +6,7 @@ import {
   LINE_VERT,
   PARTICLE_FRAG,
   PARTICLE_VERT,
+  STREAK_VERT,
 } from './shaders'
 
 export const FORMATIONS = 5
@@ -61,8 +62,12 @@ const SHARED_UNIFORMS = [
   'uFocus',
   'uPal',
   'uInk',
+  'uHalf',
+  'uScroll',
+  'uVel',
+  'uSpin',
 ] as const
-const PARTICLE_ONLY = ['uScatter', 'uPixel', 'uMaxPoint', 'uHalf'] as const
+const PARTICLE_ONLY = ['uScatter', 'uPixel', 'uMaxPoint'] as const
 
 type SharedUniform = (typeof SHARED_UNIFORMS)[number]
 type ParticleUniform = SharedUniform | (typeof PARTICLE_ONLY)[number]
@@ -157,6 +162,11 @@ function buildLines(gridCols: number, rows: number) {
 
 const CAMERA_Z = 10
 const FOV = (45 * Math.PI) / 180
+// How far the dust moves per screen of page scroll, as a share of the page's own
+// movement at the focal plane. Below 1, so the dust reads as deeper than the page.
+const DUST_PARALLAX = 0.6
+// Radians the formations turn per screen of scroll.
+const SCROLL_TURN = 0.45
 
 export class ParticleField {
   private readonly canvas: HTMLCanvasElement
@@ -165,12 +175,16 @@ export class ParticleField {
   private lineProgram: WebGLProgram | null = null
   private blurProgram: WebGLProgram | null = null
   private compositeProgram: WebGLProgram | null = null
+  private streakProgram: WebGLProgram | null = null
   private particleVao: WebGLVertexArrayObject | null = null
   private lineVao: WebGLVertexArrayObject | null = null
+  private streakVao: WebGLVertexArrayObject | null = null
   private emptyVao: WebGLVertexArrayObject | null = null
   private buffers: WebGLBuffer[] = []
   private pLoc = {} as Locations<ParticleUniform>
   private lLoc = {} as Locations<SharedUniform>
+  private sLoc = {} as Locations<SharedUniform>
+  private dustCount = 0
   private blurLoc = { tex: null as WebGLUniformLocation | null, dir: null as WebGLUniformLocation | null }
   private compLoc = {
     tex: null as WebGLUniformLocation | null,
@@ -211,7 +225,9 @@ export class ParticleField {
   private readonly tilt = { x: 0, y: 0 }
   private readonly pulse = { x: 0, y: 0, age: -1 }
   private readonly perf = { frames: 0, total: 0, stage: 0 }
-  private frameState = { scatter: 0, ox: 0, oy: 0, oz: 0, scale: 1, intensity: 1 }
+  // Page scroll in screen heights, eased, and its speed in screens per second.
+  private readonly scroll = { target: 0, value: 0, velocity: 0, primed: false }
+  private frameState = { scatter: 0, ox: 0, oy: 0, oz: 0, scale: 1, intensity: 1, dust: 0, vel: 0, yaw: 0, pitch: 0 }
 
   constructor(canvas: HTMLCanvasElement, options: FieldOptions) {
     const gl = canvas.getContext('webgl2', {
@@ -262,8 +278,10 @@ export class ParticleField {
     this.lineProgram = link(gl, LINE_VERT, LINE_FRAG)
     this.blurProgram = link(gl, FULLSCREEN_VERT, BLUR_FRAG)
     this.compositeProgram = link(gl, FULLSCREEN_VERT, COMPOSITE_FRAG)
+    this.streakProgram = link(gl, STREAK_VERT, LINE_FRAG)
     this.pLoc = locate(gl, this.particleProgram, [...SHARED_UNIFORMS, ...PARTICLE_ONLY])
     this.lLoc = locate(gl, this.lineProgram, SHARED_UNIFORMS)
+    this.sLoc = locate(gl, this.streakProgram, SHARED_UNIFORMS)
     this.blurLoc = {
       tex: gl.getUniformLocation(this.blurProgram, 'uTex'),
       dir: gl.getUniformLocation(this.blurProgram, 'uDir'),
@@ -311,6 +329,26 @@ export class ParticleField {
     gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 32, 0)
     gl.enableVertexAttribArray(1)
     gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 32, 16)
+
+    // The dust motes again (the shader's `ambient` test), one streak each, drawn instanced.
+    const dustA: number[] = []
+    const dustB: number[] = []
+    for (let i = 0; i < this.count; i++) {
+      if (seedB[i * 4 + 3] < 0.87) continue
+      for (let k = 0; k < 4; k++) {
+        dustA.push(seedA[i * 4 + k])
+        dustB.push(seedB[i * 4 + k])
+      }
+    }
+    this.dustCount = dustA.length / 4
+    this.streakVao = gl.createVertexArray()
+    gl.bindVertexArray(this.streakVao)
+    ;[new Float32Array(dustA), new Float32Array(dustB)].forEach((data, index) => {
+      makeBuffer(data)
+      gl.enableVertexAttribArray(index)
+      gl.vertexAttribPointer(index, 4, gl.FLOAT, false, 0, 0)
+      gl.vertexAttribDivisor(index, 1)
+    })
 
     this.emptyVao = gl.createVertexArray()
     gl.bindVertexArray(null)
@@ -406,6 +444,15 @@ export class ParticleField {
     this.computeLayouts()
   }
 
+  /** Page scroll in screen heights. The first value is taken as is, so a page opened mid-way doesn't streak. */
+  setScroll(screens: number) {
+    this.scroll.target = screens
+    if (!this.scroll.primed) {
+      this.scroll.value = screens
+      this.scroll.primed = true
+    }
+  }
+
   setPointer(x: number, y: number) {
     this.mouse.tx = x
     this.mouse.ty = y
@@ -440,15 +487,15 @@ export class ParticleField {
     this.canvas.removeEventListener('webglcontextrestored', this.onContextRestored)
     const gl = this.gl
     this.buffers.forEach((buffer) => gl.deleteBuffer(buffer))
-    ;[this.particleVao, this.lineVao, this.emptyVao].forEach((vao) => vao && gl.deleteVertexArray(vao))
-    ;[this.particleProgram, this.lineProgram, this.blurProgram, this.compositeProgram].forEach(
+    ;[this.particleVao, this.lineVao, this.streakVao, this.emptyVao].forEach((vao) => vao && gl.deleteVertexArray(vao))
+    ;[this.particleProgram, this.lineProgram, this.blurProgram, this.compositeProgram, this.streakProgram].forEach(
       (program) => program && gl.deleteProgram(program),
     )
     this.freeTarget(this.bloomA)
     this.freeTarget(this.bloomB)
     this.buffers = []
-    this.particleVao = this.lineVao = this.emptyVao = null
-    this.particleProgram = this.lineProgram = this.blurProgram = this.compositeProgram = null
+    this.particleVao = this.lineVao = this.streakVao = this.emptyVao = null
+    this.particleProgram = this.lineProgram = this.blurProgram = this.compositeProgram = this.streakProgram = null
     this.bloomA = this.bloomB = null
   }
 
@@ -523,6 +570,19 @@ export class ParticleField {
       if (this.pulse.age > 1.8) this.pulse.age = -1
     }
 
+    // Scroll camera. With reduced motion the scene ignores the scroll entirely.
+    const sc = this.scroll
+    const before = sc.value
+    sc.value += (sc.target - sc.value) * (1 - Math.exp(-dt * 9))
+    const speed = dt > 0 ? Math.max(-8, Math.min(8, (sc.value - before) / dt)) : 0
+    sc.velocity += (speed - sc.velocity) * (1 - Math.exp(-dt * 10))
+    const world = 2 * this.halfH * DUST_PARALLAX
+    const scrollOn = this.reduced ? 0 : 1
+    s.dust = sc.value * world * scrollOn
+    s.vel = sc.velocity * world * scrollOn
+    s.yaw = sc.value * SCROLL_TURN * scrollOn
+    s.pitch = Math.sin(sc.value * 0.6) * 0.12 * scrollOn
+
     this.draw()
   }
 
@@ -546,6 +606,10 @@ export class ParticleField {
     gl.uniform1f(loc.uFocus, CAMERA_Z - s.oz)
     gl.uniform3fv(loc.uPal, this.palette)
     gl.uniform1f(loc.uInk, this.ink)
+    gl.uniform2f(loc.uHalf, this.halfW, this.halfH)
+    gl.uniform1f(loc.uScroll, s.dust)
+    gl.uniform1f(loc.uVel, s.vel)
+    gl.uniform2f(loc.uSpin, s.yaw, s.pitch)
   }
 
   /** Particles and connections, at the given resolution scale (1 for screen, 0.5 for the glow). */
@@ -558,7 +622,6 @@ export class ParticleField {
       gl.uniform1f(this.pLoc.uScatter, s.scatter)
       gl.uniform1f(this.pLoc.uPixel, 3.0 * this.dpr * pixelScale)
       gl.uniform1f(this.pLoc.uMaxPoint, 56 * this.dpr * pixelScale)
-      gl.uniform2f(this.pLoc.uHalf, this.halfW, this.halfH)
       gl.bindVertexArray(this.particleVao)
       gl.drawArrays(gl.POINTS, 0, this.drawCount)
     }
@@ -567,6 +630,13 @@ export class ParticleField {
       this.setShared(this.lLoc)
       gl.bindVertexArray(this.lineVao)
       gl.drawArrays(gl.LINES, 0, this.lineVertexCount)
+    }
+    // Streaks only exist while the page moves fast enough to show them.
+    if (this.streakProgram && this.streakVao && Math.abs(s.vel) > 2 && this.intro > 0.5) {
+      gl.useProgram(this.streakProgram)
+      this.setShared(this.sLoc)
+      gl.bindVertexArray(this.streakVao)
+      gl.drawArraysInstanced(gl.LINES, 0, 2, this.dustCount)
     }
   }
 

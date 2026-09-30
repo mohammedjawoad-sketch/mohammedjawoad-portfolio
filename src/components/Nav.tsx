@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useScroll } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n'
 import { cn, useScrollSpy } from '../lib'
@@ -16,6 +16,7 @@ export function Nav() {
   const menuButton = useRef<HTMLButtonElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
   const active = useScrollSpy(['top', ...t.nav.links.map((link) => link.id)])
+  const { scrollYProgress } = useScroll()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -51,6 +52,12 @@ export function Nav() {
           scrolled && 'bg-ink/70 shadow-[inset_0_-1px_0_var(--color-line)] backdrop-blur-xl',
         )}
       >
+        {/* How far down the page the reader is: a beam of light along the bar's lower edge. */}
+        <motion.span
+          aria-hidden="true"
+          className={cn('scroll-beam', scrolled && 'is-on')}
+          style={{ scaleX: scrollYProgress }}
+        />
         <div className="container-x flex h-[4.5rem] items-center gap-4">
           <a href="#top" aria-label={t.nav.home} className="group flex items-center gap-3 rounded-lg">
             <Logo className="size-8 text-bone transition-transform duration-700 ease-out group-hover:rotate-[51.4deg]" />

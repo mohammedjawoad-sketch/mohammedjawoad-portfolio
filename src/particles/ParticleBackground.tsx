@@ -84,6 +84,7 @@ export function ParticleBackground() {
     const update = () => {
       queued = false
       field.setTarget(weightsForScroll())
+      field.setScroll(window.scrollY / Math.max(1, window.innerHeight))
     }
     const onScroll = () => {
       if (queued) return

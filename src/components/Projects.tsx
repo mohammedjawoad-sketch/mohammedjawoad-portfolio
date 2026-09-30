@@ -1,8 +1,9 @@
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
-import { useRef, type PointerEvent } from 'react'
+import { useRef, type CSSProperties, type ReactNode } from 'react'
 import type { Project } from '../content/types'
+import { useTilt } from '../depth'
 import { useI18n } from '../i18n'
-import { useMediaQuery, vars } from '../lib'
+import { useMediaQuery, usePrefersReducedMotion, vars } from '../lib'
 import { site } from '../site.config'
 import { CheckIcon, GitHubIcon } from './Icons'
 import { Reveal, SectionHeading } from './Reveal'
@@ -41,35 +42,40 @@ interface CardProps {
 function ProjectCard({ project, index, total, progress, stacked }: CardProps) {
   const { t } = useI18n()
   const labels = t.projects
-  // Earlier cards shrink a little as later ones slide over them.
+  const reduced = usePrefersReducedMotion()
+  const covered = index < total - 1
+  const span = [index / total, (index + 1) / total]
+  // As the next card slides over it, a card shrinks, tips back into the stack and dims.
   const scale = useTransform(progress, [index / total, 1], [1, 1 - (total - 1 - index) * 0.025])
-
-  // Soft light that follows the pointer across the card.
-  const onPointerMove = (e: PointerEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`)
-    e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`)
-  }
+  const rotateX = useTransform(progress, span, [0, covered ? -8 : 0])
+  const shade = useTransform(progress, span, [0, covered ? 0.5 : 0])
+  const deck = stacked && !reduced
 
   return (
     <div className="project-slot" style={vars({ '--i': index })}>
       <motion.article
-        onPointerMove={onPointerMove}
-        style={stacked ? { scale, transformOrigin: 'top center' } : undefined}
-        initial={stacked ? undefined : { opacity: 0, y: 28 }}
-        whileInView={stacked ? undefined : { opacity: 1, y: 0 }}
+        // The prerendered page starts in the list layout; switching to the deck
+        // mounts a fresh card, since a card that started hidden for the list
+        // entrance would otherwise stay hidden once whileInView is gone.
+        key={stacked ? 'deck' : 'list'}
+        style={
+          stacked
+            ? { scale, rotateX: deck ? rotateX : 0, transformPerspective: 1600, transformOrigin: 'top center' }
+            : { transformPerspective: 1200, transformOrigin: '50% 100%' }
+        }
+        initial={stacked ? undefined : { opacity: 0, y: 36, rotateX: 12 }}
+        whileInView={stacked ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
         viewport={{ once: true, margin: '0px 0px -10% 0px' }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="panel project-card group relative grid gap-8 overflow-hidden rounded-[1.75rem] p-6 md:p-10 lg:grid-cols-12 lg:gap-10"
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background:
-              'radial-gradient(28rem circle at var(--mx, 50%) var(--my, 50%), rgb(var(--accent-rgb) / 0.12), transparent 70%)',
-          }}
-        />
+        {deck && (
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-10 rounded-[inherit] bg-ink"
+            style={{ opacity: shade }}
+          />
+        )}
         <div className="relative lg:col-span-7">
           <p className="flex flex-wrap items-center gap-3 text-[0.9rem] text-mist">
             {project.client}
@@ -167,6 +173,24 @@ export function Projects() {
   )
 }
 
+/** A tile that leans toward the pointer. */
+function TiltTile({ href, className, style, children }: { href: string; className: string; style?: CSSProperties; children: ReactNode }) {
+  const tilt = useTilt(7)
+  return (
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      style={{ ...style, ...tilt.style }}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
+    >
+      {children}
+    </motion.a>
+  )
+}
+
 /** The seven applications, each linked to its write-up on GitHub; the code itself stays private. */
 function GitHubProjects() {
   const { t } = useI18n()
@@ -184,10 +208,8 @@ function GitHubProjects() {
         {g.items.map((item, i) => (
           <li key={item.caseStudy}>
             <Reveal className="h-full" delay={0.05 * (i % 4)}>
-              <a
+              <TiltTile
                 href={`${site.caseStudies}#${item.caseStudy}`}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="panel project-card group flex h-full flex-col rounded-2xl p-6 transition-shadow duration-300 hover:shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.5)]"
               >
                 <span className="block text-[0.85rem] text-mist">{item.client}</span>
@@ -199,16 +221,14 @@ function GitHubProjects() {
                   <GitHubIcon className="size-4 flex-none" />
                   {g.readLink}
                 </span>
-              </a>
+              </TiltTile>
             </Reveal>
           </li>
         ))}
         <li>
           <Reveal className="h-full" delay={0.15}>
-            <a
+            <TiltTile
               href={site.caseStudies}
-              target="_blank"
-              rel="noopener noreferrer"
               className="panel project-card group flex h-full flex-col justify-between gap-6 rounded-2xl p-6 shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.55)]"
               style={{
                 background:
@@ -223,7 +243,7 @@ function GitHubProjects() {
                 </span>
               </span>
               <span className="btn btn-primary min-h-11 self-start px-4 text-[0.925rem]">{g.allAction}</span>
-            </a>
+            </TiltTile>
           </Reveal>
         </li>
       </ul>

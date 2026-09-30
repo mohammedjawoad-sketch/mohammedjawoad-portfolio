@@ -28,10 +28,12 @@ export function Process() {
               <motion.li
                 key={step.name}
                 className="relative flex gap-5 lg:block"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                // Each step flips down from the rail on a hinge along its top edge.
+                style={{ transformPerspective: 900, transformOrigin: '50% 0%' }}
+                initial={{ opacity: 0, rotateX: -80, y: -6 }}
+                whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
                 viewport={{ once: true, margin: '0px 0px -15% 0px' }}
-                transition={{ duration: 0.7, ease, delay: 0.25 + i * 0.12 }}
+                transition={{ duration: 0.9, ease, delay: 0.25 + i * 0.14 }}
               >
                 <span
                   aria-hidden="true"

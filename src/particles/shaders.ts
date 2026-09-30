@@ -14,6 +14,10 @@
 //   2 hub      seven systems streaming data into one core
 //   3 grid     a wireframe terrain behind the text-heavy sections
 //   4 hud      rotating interface rings with a data spiral, for the contact section
+//
+// The page scroll drives the camera: the dust moves with the page at its own
+// depth (parallax), fast scrolling stretches it into light streaks, and the
+// formations turn in 3D as the page moves. A scanner band sweeps through them.
 
 const UNIFORMS = /* glsl */ `
 uniform mat4 uProj;
@@ -33,6 +37,10 @@ uniform float uCount;
 uniform float uFocus;
 uniform vec3 uPal[4];
 uniform float uInk;
+uniform vec2 uHalf;
+uniform float uScroll;
+uniform float uVel;
+uniform vec2 uSpin;
 `
 
 const COMMON = /* glsl */ `
@@ -74,6 +82,26 @@ float weightOf(int f) {
   if (f == 2) return uW[2];
   if (f == 3) return uW[3];
   return uW[4];
+}
+
+// Dust drifting up through the whole view. uScroll moves it with the page in
+// world units, so near motes pass faster than far ones, as they would past a camera.
+vec3 dustPos(vec4 a, vec4 a2, float t) {
+  float rangeY = uHalf.y * 2.8;
+  vec3 p = vec3((a.x - 0.5) * uHalf.x * 2.8, 0.0, mix(-8.0, 5.8, a2.x));
+  p.y = mod(a.y * rangeY + t * (0.06 + 0.1 * a.z) + uScroll, rangeY) - rangeY * 0.5;
+  return p + flow(p * 0.25 + a.w * 10.0, t * 0.35) * 0.4;
+}
+
+// The formations turn as the page scrolls.
+mat3 scrollSpin() {
+  return rotY(uSpin.x) * rotX(uSpin.y);
+}
+
+// A band of light rises through the shapes every 26 seconds or so, like a scanner.
+float scanAt(float y, float t) {
+  float s = mod(t * 0.42, 11.0) - 5.5;
+  return exp(-pow((y - s) * 3.2, 2.0));
 }
 
 // ---------- 0 network: Fibonacci globe; offsets 13, 21, 34 join true neighbours
@@ -193,7 +221,6 @@ ${UNIFORMS}
 uniform float uScatter;
 uniform float uPixel;
 uniform float uMaxPoint;
-uniform vec2 uHalf;
 
 out vec3 vColor;
 out float vAlpha;
@@ -357,19 +384,23 @@ void main() {
 
   if (ambient > 0.5) {
     // Dust drifting up through the whole view; the closest motes blur into bokeh.
-    float rangeY = uHalf.y * 2.8;
-    p = vec3((aSeed.x - 0.5) * uHalf.x * 2.8, 0.0, mix(-8.0, 5.8, aSeed2.x));
-    p.y = mod(aSeed.y * rangeY + t * (0.06 + 0.1 * aSeed.z), rangeY) - rangeY * 0.5;
-    p += flow(p * 0.25 + aSeed.w * 10.0, t * 0.35) * 0.4;
+    p = dustPos(aSeed, aSeed2, t);
     c = vec4(mix(mix(BLUE, VIOLET, aSeed.y), CYAN, aSeed.z * 0.7), mix(0.42, 0.3, uInk));
     arrive = uIntro;
   } else {
     vec4 fc;
-    if (uW[0] > 0.001) { p += uW[0] * network(aSeed, aSeed2, t, fc); c += uW[0] * fc; }
-    if (uW[1] > 0.001) { p += uW[1] * chip(aSeed, aSeed2, t, fc);    c += uW[1] * fc; }
-    if (uW[2] > 0.001) { p += uW[2] * hub(aSeed, aSeed2, t, fc);     c += uW[2] * fc; }
-    if (uW[3] > 0.001) { p += uW[3] * grid(aSeed2, t, fc);           c += uW[3] * fc; }
-    if (uW[4] > 0.001) { p += uW[4] * hud(aSeed, aSeed2, t, fc);     c += uW[4] * fc; }
+    // The terrain stays level; the objects turn with the scroll.
+    mat3 spin = scrollSpin();
+    if (uW[0] > 0.001) { p += uW[0] * (spin * network(aSeed, aSeed2, t, fc)); c += uW[0] * fc; }
+    if (uW[1] > 0.001) { p += uW[1] * (spin * chip(aSeed, aSeed2, t, fc));    c += uW[1] * fc; }
+    if (uW[2] > 0.001) { p += uW[2] * (spin * hub(aSeed, aSeed2, t, fc));     c += uW[2] * fc; }
+    if (uW[3] > 0.001) { p += uW[3] * grid(aSeed2, t, fc);                    c += uW[3] * fc; }
+    if (uW[4] > 0.001) { p += uW[4] * (spin * hud(aSeed, aSeed2, t, fc));     c += uW[4] * fc; }
+
+    // The scanner band lights up what it passes through.
+    float scan = scanAt(p.y, t) * (1.0 - stray);
+    c.rgb = mix(c.rgb, WHITE, scan * 0.6);
+    c.a = min(1.0, c.a * (1.0 + scan * 1.4));
 
     p = p * uScale + uOffset;
 
@@ -560,7 +591,10 @@ void main() {
   float alpha;
   vec3 lcol;
   vec3 p = linePoint(f, aLine.y, aLine.z, aLine2.x, aLine.w, t, alpha, lcol);
-  vColor = lcol;
+  if (f != 3) p = scrollSpin() * p;
+  float scan = scanAt(p.y, t);
+  vColor = mix(lcol, WHITE, scan * 0.5);
+  alpha *= 1.0 + scan * 1.6;
   p = p * uScale + uOffset;
   p = rotY(uTilt.x) * rotX(uTilt.y) * p;
 
@@ -592,6 +626,39 @@ out vec4 outColor;
 void main() {
   float a = min(vAlpha * mix(1.0, 1.2, uInk), 1.0);
   outColor = vec4(vColor * a, a);
+}
+`
+
+// Light streaks behind the dust while the page scrolls fast. One instanced line
+// per mote: vertex 0 sits on the mote, vertex 1 trails behind it and fades out.
+// Drawn with LINE_FRAG.
+export const STREAK_VERT = /* glsl */ `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec4 aSeed;
+layout(location = 1) in vec4 aSeed2;
+${UNIFORMS}
+
+out float vAlpha;
+out vec3 vColor;
+${COMMON}
+
+void main() {
+  float end = float(gl_VertexID);
+  vec3 p = dustPos(aSeed, aSeed2, uTime);
+  // The dust rises while the page scrolls down, so the tail hangs below it.
+  p.y -= clamp(uVel * 0.07, -1.8, 1.8) * end;
+  p = rotY(uTilt.x) * rotX(uTilt.y) * p;
+
+  vec4 mv = vec4(p.x, p.y, p.z - 10.0, 1.0);
+  gl_Position = uProj * mv;
+
+  float depth = max(0.4, -mv.z);
+  float fog = smoothstep(21.0, 6.0, depth);
+  // Only a fast scroll draws them, and only from about half the motes.
+  float speed = smoothstep(2.0, 12.0, abs(uVel));
+  vColor = mix(mix(BLUE, VIOLET, aSeed.y), CYAN, aSeed.z * 0.7);
+  vAlpha = (1.0 - end) * speed * fog * uIntro * mix(0.42, 0.3, uInk) * smoothstep(0.35, 0.8, aSeed.z);
 }
 `
 

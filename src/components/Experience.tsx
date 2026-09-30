@@ -1,9 +1,26 @@
 import { motion, useScroll, useSpring } from 'motion/react'
-import { useRef } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { useI18n } from '../i18n'
-import { Reveal, SectionHeading } from './Reveal'
+import { SectionHeading } from './Reveal'
 
 const ease = [0.16, 1, 0.3, 1] as const
+
+/** Each entry swings open from the timeline rail, like a door on its hinge. */
+function Swing({ children }: { children: ReactNode }) {
+  const { dir } = useI18n()
+  const rtl = dir === 'rtl'
+  return (
+    <motion.div
+      style={{ transformPerspective: 1200, transformOrigin: rtl ? '100% 50%' : '0% 50%' }}
+      initial={{ opacity: 0, rotateY: rtl ? -32 : 32, z: -40 }}
+      whileInView={{ opacity: 1, rotateY: 0, z: 0 }}
+      viewport={{ once: true, margin: '0px 0px -15% 0px' }}
+      transition={{ duration: 1.1, ease }}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
 export function Experience() {
   const { t, lang } = useI18n()
@@ -42,7 +59,7 @@ export function Experience() {
                   viewport={{ once: true, margin: '0px 0px -30% 0px' }}
                   transition={{ duration: 0.5, ease }}
                 />
-                <Reveal y={20}>
+                <Swing>
                   <p className="num text-[0.9rem] text-accent">{role.period}</p>
                   <h3 className="t-h3 mt-2">{role.title}</h3>
                   <p className="mt-1 text-bone/85">
@@ -61,7 +78,7 @@ export function Experience() {
                       </li>
                     ))}
                   </ul>
-                </Reveal>
+                </Swing>
               </li>
             ))}
 
@@ -74,7 +91,7 @@ export function Experience() {
                 viewport={{ once: true, margin: '0px 0px -30% 0px' }}
                 transition={{ duration: 0.5, ease }}
               />
-              <Reveal y={20}>
+              <Swing>
                 <p className="text-[0.9rem] text-glow">
                   {x.educationLabel}
                   {comma}
@@ -82,7 +99,7 @@ export function Experience() {
                 </p>
                 <h3 className="t-h3 mt-2">{x.education.degree}</h3>
                 <p className="mt-1 text-mist">{x.education.school}</p>
-              </Reveal>
+              </Swing>
             </li>
           </ol>
         </div>

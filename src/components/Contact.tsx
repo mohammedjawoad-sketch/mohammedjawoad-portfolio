@@ -160,7 +160,7 @@ export function Contact({ prefill }: { prefill: Prefill | null }) {
 
         <Reveal className="lg:col-span-7" delay={0.08}>
           <form
-            className="panel rounded-[1.75rem] p-6 md:p-10"
+            className="panel panel-energy rounded-[1.75rem] p-6 md:p-10"
             onSubmit={(e) => {
               e.preventDefault()
               sendWhatsapp()

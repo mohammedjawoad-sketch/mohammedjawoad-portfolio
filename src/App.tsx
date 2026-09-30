@@ -54,6 +54,32 @@ export default function App() {
     }
   }, [])
 
+  // Light on the glass: the panel under the pointer catches a soft glow where it is.
+  useEffect(() => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    let hot: HTMLElement | null = null
+    const onMove = (e: PointerEvent) => {
+      const panel = e.target instanceof Element ? e.target.closest<HTMLElement>('.panel') : null
+      if (hot && hot !== panel) delete hot.dataset.hot
+      hot = panel
+      if (!panel) return
+      const rect = panel.getBoundingClientRect()
+      panel.style.setProperty('--mx', `${Math.round(e.clientX - rect.left)}px`)
+      panel.style.setProperty('--my', `${Math.round(e.clientY - rect.top)}px`)
+      panel.dataset.hot = ''
+    }
+    const onLeave = () => {
+      if (hot) delete hot.dataset.hot
+      hot = null
+    }
+    document.addEventListener('pointermove', onMove, { passive: true })
+    document.documentElement.addEventListener('pointerleave', onLeave)
+    return () => {
+      document.removeEventListener('pointermove', onMove)
+      document.documentElement.removeEventListener('pointerleave', onLeave)
+    }
+  }, [])
+
   return (
     <MotionConfig reducedMotion="user">
       <ParticleBackground />
