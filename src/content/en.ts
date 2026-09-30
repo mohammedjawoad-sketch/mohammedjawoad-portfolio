@@ -166,7 +166,7 @@ export const en: Content = {
   projects: {
     title: 'Seven applications for one group',
     intro:
-      'Built for Al-Rafidain Group companies on SAP Business One. Each one replaced a manual step or a legacy report.',
+      'Built on SAP Business One and SAP HANA. Each one replaced a manual step or a legacy report.',
     resultsLabel: 'Results',
     stackLabel: 'Built with',
     flowLabel: 'How it connects',
@@ -249,7 +249,7 @@ export const en: Content = {
     github: {
       title: 'The seven projects on GitHub',
       intro:
-        'Each application has its own write-up on GitHub: the problem, how it connects to SAP, and the results. The code belongs to the company, so it stays private.',
+        'Each application has its own write-up on GitHub: the problem, how it connects to SAP, and the results. The source code is private, so the write-ups are published instead.',
       readLink: 'Case study on GitHub',
       all: 'All seven write-ups in one repository',
       allAction: 'Open on GitHub',
