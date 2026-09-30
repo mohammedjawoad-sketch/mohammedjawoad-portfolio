@@ -8,8 +8,8 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/mohammed-jawoad-219a75159',
   github: 'https://github.com/mohammedjawoad-sketch',
   caseStudies: 'https://github.com/mohammedjawoad-sketch/erp-case-studies',
-  /** In public/, copied there by `npm run cv:pdf`. */
-  cvFile: 'Mohammed-Jawoad-CV.pdf',
+  /** In public/, copied there by `npm run cv:pdf`. Absolute, so it works from /ar/ too. */
+  cvFile: '/Mohammed-Jawoad-CV.pdf',
 }
 
 export const whatsappLink = (text?: string) =>

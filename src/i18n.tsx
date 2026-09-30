@@ -35,17 +35,10 @@ function keepTogether<T>(value: T): T {
 
 const dictionaries: Record<Lang, Content> = { en: keepTogether(en), ar: keepTogether(ar) }
 
-function initialLang(): Lang {
-  const param = new URLSearchParams(window.location.search).get('lang')
-  if (param === 'ar' || param === 'en') return param
-  try {
-    const saved = localStorage.getItem('lang')
-    if (saved === 'ar' || saved === 'en') return saved
-  } catch {
-    // storage can be blocked; fall through to the browser language
-  }
-  return navigator.language?.toLowerCase().startsWith('ar') ? 'ar' : 'en'
-}
+// Each language has its own address, so search engines index both and a link
+// always opens in the language it was shared in: English at /, Arabic at /ar/.
+export const langFromPath = (pathname: string): Lang => (/^\/ar(\/|$)/.test(pathname) ? 'ar' : 'en')
+export const pathForLang = (lang: Lang) => (lang === 'ar' ? '/ar/' : '/')
 
 interface I18n {
   lang: Lang
@@ -56,8 +49,11 @@ interface I18n {
 
 const I18nContext = createContext<I18n | null>(null)
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>(initialLang)
+/** `initialLang` is for prerendering; in the browser the address decides. */
+export function I18nProvider({ children, initialLang }: { children: ReactNode; initialLang?: Lang }) {
+  const [lang, setLang] = useState<Lang>(
+    () => initialLang ?? (typeof window === 'undefined' ? 'en' : langFromPath(window.location.pathname)),
+  )
   const dir = lang === 'ar' ? 'rtl' : 'ltr'
 
   useEffect(() => {
@@ -66,20 +62,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     html.dir = dir
     document.title = dictionaries[lang].meta.title
     document.querySelector('meta[name="description"]')?.setAttribute('content', dictionaries[lang].meta.description)
-    try {
-      localStorage.setItem('lang', lang)
-    } catch {
-      // not critical
-    }
   }, [lang, dir])
 
   const toggle = useCallback(() => {
     setLang((current) => {
       const next = current === 'en' ? 'ar' : 'en'
-      const url = new URL(window.location.href)
-      if (next === 'ar') url.searchParams.set('lang', 'ar')
-      else url.searchParams.delete('lang')
-      window.history.replaceState(null, '', url)
+      window.history.replaceState(null, '', pathForLang(next) + window.location.hash)
       return next
     })
   }, [])

@@ -23,6 +23,16 @@ export function useMediaQuery(query: string) {
 
 export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)')
 
+const noSubscribe = () => () => {}
+
+/** False in the prerendered HTML and while hydrating, true once running in the browser. */
+export const useHydrated = () =>
+  useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false,
+  )
+
 /** Returns the id of the section currently crossing the middle of the viewport. */
 export function useScrollSpy(ids: readonly string[]) {
   const [active, setActive] = useState<string | null>(null)

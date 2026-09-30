@@ -1,13 +1,16 @@
 import { motion, useInView } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n'
-import { usePrefersReducedMotion } from '../lib'
+import { useHydrated, usePrefersReducedMotion } from '../lib'
 import type { LedgerRow } from '../content/types'
 import { CheckIcon } from './Icons'
 import { SectionHeading } from './Reveal'
 
 function Counter({ to, run, delay }: { to: number; run: boolean; delay: number }) {
   const reduced = usePrefersReducedMotion()
+  // The prerendered page shows the real figure (for search engines and first paint);
+  // in the browser it counts up from zero when the ledger scrolls into view.
+  const hydrated = useHydrated()
   const [value, setValue] = useState(0)
 
   useEffect(() => {
@@ -28,7 +31,7 @@ function Counter({ to, run, delay }: { to: number; run: boolean; delay: number }
     return () => cancelAnimationFrame(frame)
   }, [run, to, delay, reduced])
 
-  return <>{value}</>
+  return <>{hydrated ? value : to}</>
 }
 
 function Figure({ row, run, delay }: { row: LedgerRow; run: boolean; delay: number }) {

@@ -39,7 +39,7 @@ export function Footer() {
         </div>
       </div>
       <div className="container-x pb-8 text-[0.8rem] text-mist/60">
-        © <span className="num">{year}</span> {fullName}
+        © <span className="num" suppressHydrationWarning>{year}</span> {fullName}
       </div>
     </footer>
   )

@@ -2,9 +2,9 @@ import type { Content } from './types'
 
 export const en: Content = {
   meta: {
-    title: 'Mohammed Jawoad | Senior SAP Consultant and Software Engineer',
+    title: 'Mohammed Jawoad | SAP Consultant & Full-Stack Developer, Baghdad',
     description:
-      'SAP Business One and SAP S/4HANA consultant and software engineer in Baghdad: SAP implementation, applications and integrations built on the Service Layer and HANA, and financial reporting. Also Odoo and ERPNext.',
+      'SAP consultant, full-stack developer, system administrator and IT consultant in Baghdad, Iraq. SAP Business One and S/4HANA, React and Node.js apps, Odoo and ERPNext.',
   },
   nav: {
     brand: 'Mohammed Jawoad',
@@ -27,12 +27,12 @@ export const en: Content = {
     close: 'Close menu',
   },
   hero: {
-    status: 'Open to SAP and software engineering roles, and consulting projects',
+    status: 'Open to SAP and full-stack development roles, and consulting projects',
     nameLines: ['Mohammed', 'Jawoad'],
     altName: 'محمد جواد',
-    role: 'Senior SAP consultant and software engineer',
+    role: 'SAP consultant, full-stack developer, system administrator and IT consultant',
     pitch:
-      'I implement SAP Business One and SAP S/4HANA, and engineer the software around them: apps, integrations and reports on the Service Layer and HANA, so finance and operations work from the same numbers. I also implement Odoo and ERPNext.',
+      'I implement SAP Business One and SAP S/4HANA, and build full-stack software around them, from React front ends to Node.js APIs and SQL on the Service Layer and HANA, so finance and operations work from the same numbers. I also implement Odoo and ERPNext.',
     ctaPrimary: 'Download CV',
     ctaSecondary: 'See my projects',
     platforms: ['SAP Business One', 'SAP S/4HANA', 'SAP HANA', 'TypeScript', 'Node.js', 'Odoo', 'ERPNext'],
@@ -53,7 +53,7 @@ export const en: Content = {
   services: {
     title: 'What I can do for your company',
     intro:
-      'SAP consulting and software engineering first, with Odoo and ERPNext where they fit better. Every engagement covers the business process as well as the system.',
+      'SAP consulting and full-stack development first, with Odoo and ERPNext where they fit better. Every engagement covers the business process as well as the system.',
     whatYouGet: 'What you get',
     tools: 'Tools',
     cta: 'Discuss this service',
@@ -73,16 +73,16 @@ export const en: Content = {
       },
       {
         id: 'apps',
-        name: 'Software engineering around SAP',
-        short: 'Custom software or integration',
+        name: 'Full-stack software development',
+        short: 'Full-stack software or integration',
         summary:
-          'Web and mobile applications that read from and post to SAP Business One through the Service Layer and HANA, engineered to replace paper forms, spreadsheets and manual approvals.',
+          'Full-stack web and mobile applications, from React and TypeScript front ends to Node.js APIs and SQL databases, connected to SAP Business One through the Service Layer and HANA to replace paper forms, spreadsheets and manual approvals.',
         outcomes: [
-          'Approvals on mobile with push notifications',
-          'Journal entries, payments and transfers posted straight to SAP',
-          'Arabic and English interfaces with role-based access and audit trails',
+          'React and TypeScript front ends, including installable mobile web apps with push notifications',
+          'Node.js APIs (Express, Hono, tRPC) on SQL Server, PostgreSQL and SAP HANA',
+          'Journal entries, payments and approvals posted straight to SAP, with role-based access and audit trails',
         ],
-        tools: ['TypeScript', 'React', 'Node.js', 'SAP Service Layer', 'SAP HANA'],
+        tools: ['TypeScript', 'React', 'Node.js', 'SQL', 'SAP Service Layer'],
       },
       {
         id: 'reporting',
@@ -99,16 +99,16 @@ export const en: Content = {
       },
       {
         id: 'infra',
-        name: 'Hosting, security and support',
-        short: 'Hosting and support',
+        name: 'System administration and IT consulting',
+        short: 'System administration or IT',
         summary:
-          'The servers, access control and backups your ERP depends on, set up properly and looked after so the system stays available.',
+          'Windows Server and Linux administration, networking, virtualization, security, backup and disaster recovery for the systems a business runs on, with IT consulting on how to set them up.',
         outcomes: [
-          'Windows Server and Linux administration',
-          'TLS, Cloudflare Tunnel and role-based access with audit logs',
+          'Windows Server and Linux administration, virtualization and networking',
+          'Security, access control, TLS and audit logs',
           'Backup, disaster recovery and health monitoring',
         ],
-        tools: ['Windows Server', 'Linux', 'Caddy', 'Cloudflare Tunnel', 'Docker'],
+        tools: ['Windows Server', 'Linux', 'Virtualization', 'Networking', 'Caddy', 'Cloudflare Tunnel'],
       },
       {
         id: 'odoo',
@@ -151,8 +151,8 @@ export const en: Content = {
       },
       {
         icon: 'build',
-        name: 'Software engineering',
-        body: 'A portal, approval flow, integration or report pack engineered around the SAP system you already run.',
+        name: 'Full-stack development',
+        body: 'A portal, approval flow, integration or report pack built end to end around the SAP system you already run.',
         fit: 'Teams whose ERP works but who still rely on manual steps',
       },
       {
@@ -327,7 +327,7 @@ export const en: Content = {
   },
   experience: {
     title: 'Experience',
-    intro: 'Eight years across ERP consulting, software engineering and the infrastructure underneath.',
+    intro: 'Eight years across ERP consulting, full-stack development and system administration.',
     roles: [
       {
         company: 'Al-Rafidain Group',
@@ -376,7 +376,7 @@ export const en: Content = {
   about: {
     title: 'About me',
     paragraphs: [
-      "I'm an SAP consultant and software engineer based in Baghdad. I started out running servers and networks, moved into ERPNext implementation, and then led SAP Business One for a group running more than seven companies on it, building the software around it as well.",
+      "I'm an SAP consultant, full-stack developer, system administrator and IT consultant based in Baghdad. I started out running servers and networks, moved into ERPNext implementation, and then led SAP Business One for a group running more than seven companies on it, building the software around it as well.",
       "Clients get both sides from one person: enough finance, procurement and inventory knowledge to design the process, and the engineering to build what the standard system doesn't do.",
       "It's fitting work for someone from Iraq. The oldest written records we have, pressed into clay in southern Mesopotamia more than 5,000 years ago, are accounts.",
     ],
@@ -404,7 +404,7 @@ export const en: Content = {
         ],
       },
       {
-        name: 'Software engineering',
+        name: 'Full-stack development',
         items: [
           'TypeScript',
           'JavaScript',
@@ -438,7 +438,7 @@ export const en: Content = {
         ],
       },
       {
-        name: 'Infrastructure and security',
+        name: 'System administration and security',
         items: [
           'Windows Server',
           'Linux',
@@ -463,7 +463,7 @@ export const en: Content = {
     items: [
       {
         q: 'Are you open to full-time roles?',
-        a: "Yes. I'm open to on-site and hybrid SAP consultant and software engineering roles, and to consulting projects. You can download my CV at the top of this page or message me directly.",
+        a: "Yes. I'm open to on-site and hybrid SAP consultant, full-stack development and system administration roles, and to consulting projects. You can download my CV at the top of this page or message me directly.",
       },
       {
         q: 'Which ERP is right for my company?',
@@ -492,7 +492,7 @@ export const en: Content = {
     ],
   },
   contact: {
-    title: 'Hiring for an SAP role, or planning a project?',
+    title: 'Hiring for an SAP or full-stack role, or planning a project?',
     intro:
       "Share a few details about the role, or about your company and the problem you want solved. I'll reply with questions or a time for a call.",
     form: {
@@ -529,7 +529,7 @@ export const en: Content = {
     },
   },
   footer: {
-    tagline: 'SAP consulting and software engineering, plus Odoo and ERPNext.',
+    tagline: 'SAP consulting, full-stack development, system administration and IT consulting, plus Odoo and ERPNext.',
     top: 'Back to top',
   },
   float: {

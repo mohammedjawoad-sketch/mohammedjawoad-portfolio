@@ -1,12 +1,12 @@
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { flushSync } from 'react-dom'
 
 export type Theme = 'dark' | 'light'
 
 const THEME_COLOR: Record<Theme, string> = { dark: '#05070f', light: '#f4f6fb' }
 
-// index.html sets data-theme before the first paint; start from what it chose.
-const initialTheme = (): Theme => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark')
+// index.html sets data-theme before the first paint (from ?theme= or the saved choice).
+const pageTheme = (): Theme => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark')
 
 interface ThemeState {
   theme: Theme
@@ -17,11 +17,21 @@ interface ThemeState {
 const ThemeContext = createContext<ThemeState | null>(null)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(initialTheme)
+  // Start dark to match the prerendered HTML, then adopt the page's theme before
+  // the first paint, so hydration never sees a different tree.
+  const [theme, setTheme] = useState<Theme>('dark')
+  const adopted = useRef(false)
 
   useLayoutEffect(() => {
-    const html = document.documentElement
-    html.dataset.theme = theme
+    if (!adopted.current) {
+      adopted.current = true
+      const actual = pageTheme()
+      if (actual !== theme) {
+        setTheme(actual)
+        return
+      }
+    }
+    document.documentElement.dataset.theme = theme
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[theme])
   }, [theme])
 
