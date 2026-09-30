@@ -1,7 +1,7 @@
 export type Lang = 'en' | 'ar'
 
 export type ServiceId = 'sap' | 'odoo' | 'erpnext' | 'apps' | 'reporting' | 'infra'
-export type NeedId = ServiceId | 'other'
+export type NeedId = ServiceId | 'role' | 'other'
 export type NavId = 'services' | 'projects' | 'process' | 'experience' | 'contact'
 
 export interface Service {
@@ -98,6 +98,7 @@ export interface Content {
     resultsLabel: string
     stackLabel: string
     flowLabel: string
+    caseStudies: string
     items: Project[]
   }
   process: {
@@ -133,6 +134,7 @@ export interface Content {
       companyLabel: string
       companyPlaceholder: string
       needLabel: string
+      needRole: string
       needOther: string
       messageLabel: string
       messagePlaceholder: string
@@ -150,6 +152,10 @@ export interface Content {
       whatsapp: string
       linkedin: string
       linkedinValue: string
+      cv: string
+      cvValue: string
+      caseStudies: string
+      caseStudiesValue: string
       location: string
       locationValue: string
     }

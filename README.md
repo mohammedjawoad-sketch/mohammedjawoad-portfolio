@@ -21,9 +21,9 @@ Add `?lang=ar` to the address to open the Arabic version directly.
 | --- | --- |
 | All English text | `src/content/en.ts` |
 | All Arabic text | `src/content/ar.ts` |
-| Email, WhatsApp, LinkedIn | `src/site.config.ts` |
+| Email, WhatsApp, LinkedIn, case-studies link | `src/site.config.ts` |
 | Domain (canonical link, LinkedIn preview, sitemap) | `.env` (`VITE_SITE_URL`) |
-| Your CV as a PDF, for your own use | `cv/cv.html`, then `npm run cv:pdf` to write `cv/Mohammed-Jawoad-Ali-CV.pdf` (the `cv/` folder is kept local and out of the repository) |
+| Your CV | `cv/cv.html` (kept local, out of the repository), then `npm run cv:pdf`: it writes `cv/Mohammed-Jawoad-Ali-CV.pdf` and copies it to `public/Mohammed-Jawoad-CV.pdf`, the file behind the site's "Download CV" buttons |
 
 Both language files have the same shape; TypeScript flags anything missing.
 

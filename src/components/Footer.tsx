@@ -27,6 +27,12 @@ export function Footer() {
           <a className="transition-colors hover:text-bone" href={site.linkedin} target="_blank" rel="noopener noreferrer">
             {t.contact.direct.linkedin}
           </a>
+          <a className="transition-colors hover:text-bone" href={site.caseStudies} target="_blank" rel="noopener noreferrer">
+            {t.contact.direct.caseStudies}
+          </a>
+          <a className="transition-colors hover:text-bone" href={site.cvFile} download>
+            {t.contact.direct.cv}
+          </a>
           <a className="transition-colors hover:text-bone" href="#top">
             {t.footer.top}
           </a>

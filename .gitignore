@@ -3,5 +3,5 @@ dist
 *.local
 .DS_Store
 
-# Private CV source and PDF: kept locally, not published with the site.
+# CV source and working PDF stay local; `npm run cv:pdf` publishes the PDF to public/.
 cv/

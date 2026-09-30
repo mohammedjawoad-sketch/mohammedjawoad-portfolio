@@ -1,8 +1,8 @@
-// Prints cv/cv.html to cv/Mohammed-Jawoad-Ali-CV.pdf with headless Chrome.
-// The PDF is for your own use; it is not published with the website.
+// Prints cv/cv.html to cv/Mohammed-Jawoad-Ali-CV.pdf with headless Chrome,
+// then copies it to public/Mohammed-Jawoad-CV.pdf for the site's "Download CV".
 // Usage: npm run cv:pdf
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, rmSync, statSync } from 'node:fs'
+import { copyFileSync, mkdtempSync, rmSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -34,4 +34,7 @@ try {
   rmSync(profile, { recursive: true, force: true })
 }
 
-console.log(`Wrote ${output} (${Math.round(statSync(output).size / 1024)} KB)`)
+const published = resolve('public/Mohammed-Jawoad-CV.pdf')
+copyFileSync(output, published)
+
+console.log(`Wrote ${output} (${Math.round(statSync(output).size / 1024)} KB) and copied it to ${published}`)

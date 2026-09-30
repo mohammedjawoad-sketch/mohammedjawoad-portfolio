@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import type { NeedId, ServiceId } from '../content/types'
 import { useI18n } from '../i18n'
 import { site, whatsappLink } from '../site.config'
-import { LinkedInIcon, MailIcon, PinIcon, WhatsAppIcon } from './Icons'
+import { DownloadIcon, GitHubIcon, LinkedInIcon, MailIcon, PinIcon, WhatsAppIcon } from './Icons'
 import { Reveal, SectionHeading } from './Reveal'
 
 export interface Prefill {
@@ -17,6 +17,7 @@ function DirectLink({
   value,
   href,
   external,
+  download,
   ltr,
 }: {
   icon: ReactNode
@@ -24,6 +25,7 @@ function DirectLink({
   value: string
   href?: string
   external?: boolean
+  download?: boolean
   ltr?: boolean
 }) {
   const body = (
@@ -44,6 +46,7 @@ function DirectLink({
     <a
       href={href}
       className="group flex items-center gap-4 rounded-xl"
+      download={download || undefined}
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {body}
@@ -68,6 +71,7 @@ export function Contact({ prefill }: { prefill: Prefill | null }) {
   }, [prefill])
 
   const needOptions: { id: NeedId; label: string }[] = [
+    { id: 'role', label: f.needRole },
     ...t.services.items.map((s) => ({ id: s.id, label: s.short })),
     { id: 'other', label: f.needOther },
   ]
@@ -133,6 +137,20 @@ export function Contact({ prefill }: { prefill: Prefill | null }) {
                 label={c.direct.linkedin}
                 value={c.direct.linkedinValue}
                 href={site.linkedin}
+                external
+              />
+              <DirectLink
+                icon={<DownloadIcon className="size-5" />}
+                label={c.direct.cv}
+                value={c.direct.cvValue}
+                href={site.cvFile}
+                download
+              />
+              <DirectLink
+                icon={<GitHubIcon className="size-[1.1rem]" />}
+                label={c.direct.caseStudies}
+                value={c.direct.caseStudiesValue}
+                href={site.caseStudies}
                 external
               />
               <DirectLink icon={<PinIcon className="size-5" />} label={c.direct.location} value={c.direct.locationValue} />

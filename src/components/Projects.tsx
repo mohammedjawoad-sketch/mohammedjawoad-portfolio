@@ -3,8 +3,9 @@ import { useRef, type PointerEvent } from 'react'
 import type { Project } from '../content/types'
 import { useI18n } from '../i18n'
 import { useMediaQuery, vars } from '../lib'
-import { CheckIcon } from './Icons'
-import { SectionHeading } from './Reveal'
+import { site } from '../site.config'
+import { CheckIcon, GitHubIcon } from './Icons'
+import { Reveal, SectionHeading } from './Reveal'
 
 function FlowDiagram({ steps, label }: { steps: string[]; label: string }) {
   return (
@@ -121,6 +122,19 @@ export function Projects() {
     <section id="projects" data-formation="2" className="section-pad relative" aria-labelledby="projects-title">
       <div className="container-x">
         <SectionHeading id="projects-title" title={t.projects.title} intro={t.projects.intro} className="max-w-3xl" />
+        <Reveal delay={0.1}>
+          <a
+            href={site.caseStudies}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-6 inline-flex items-center gap-2.5 rounded-lg text-[0.95rem] text-accent-soft transition-colors hover:text-bone"
+          >
+            <GitHubIcon className="size-[1.1rem]" />
+            <span className="underline decoration-accent/40 underline-offset-4 transition-colors group-hover:decoration-bone/60">
+              {t.projects.caseStudies}
+            </span>
+          </a>
+        </Reveal>
         <div ref={listRef} className="mt-14 space-y-6">
           {items.map((project, i) => (
             <ProjectCard

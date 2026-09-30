@@ -1,5 +1,7 @@
 import { useI18n } from '../i18n'
 import { vars } from '../lib'
+import { site } from '../site.config'
+import { DownloadIcon } from './Icons'
 
 export function Hero() {
   const { t, lang } = useI18n()
@@ -59,7 +61,8 @@ export function Hero() {
           </p>
 
           <div className="og-hide rise mt-9 flex flex-wrap gap-3" style={vars({ '--d': '1250ms' })}>
-            <a href="#contact" className="btn btn-primary">
+            <a href={site.cvFile} download className="btn btn-primary">
+              <DownloadIcon className="size-5" />
               {hero.ctaPrimary}
             </a>
             <a href="#projects" className="btn btn-ghost">
