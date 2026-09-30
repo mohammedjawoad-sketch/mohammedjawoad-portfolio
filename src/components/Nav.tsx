@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n'
 import { cn, useScrollSpy } from '../lib'
 import { whatsappLink } from '../site.config'
-import { CloseIcon, Logo, MenuIcon, WhatsAppIcon } from './Icons'
+import { useTheme } from '../theme'
+import { CloseIcon, Logo, MenuIcon, MoonIcon, SunIcon, WhatsAppIcon } from './Icons'
 
 const ease = [0.16, 1, 0.3, 1] as const
 
 export function Nav() {
   const { t, lang, toggle } = useI18n()
+  const { theme, toggle: toggleTheme } = useTheme()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
@@ -39,6 +41,7 @@ export function Nav() {
   }, [open])
 
   const otherLang = lang === 'en' ? 'ar' : 'en'
+  const themeLabel = theme === 'dark' ? t.nav.themeToLight : t.nav.themeToDark
 
   return (
     <>
@@ -93,6 +96,22 @@ export function Nav() {
               className="rounded-lg px-3 py-2 text-[0.925rem] text-mist transition-colors hover:text-bone"
             >
               <span lang={otherLang}>{t.nav.langSwitch}</span>
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                const r = e.currentTarget.getBoundingClientRect()
+                toggleTheme({ x: r.left + r.width / 2, y: r.top + r.height / 2 })
+              }}
+              aria-label={themeLabel}
+              title={themeLabel}
+              className="flex size-11 items-center justify-center rounded-lg text-mist transition-colors hover:text-bone lg:size-10"
+            >
+              {theme === 'dark' ? (
+                <SunIcon key="sun" className="theme-icon size-[1.2rem]" />
+              ) : (
+                <MoonIcon key="moon" className="theme-icon size-[1.1rem]" />
+              )}
             </button>
             <a href="#contact" className="btn btn-primary hidden min-h-10 px-4 text-[0.9rem] sm:inline-flex">
               {t.nav.cta}

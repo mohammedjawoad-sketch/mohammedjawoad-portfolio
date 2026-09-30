@@ -20,13 +20,26 @@ export function Logo(props: IconProps) {
       <circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" strokeOpacity="0.2" />
       <g className="logo-orbit">
         {dots.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r="2" fill={i % 2 ? '#45dcff' : '#7aa2ff'} />
+          <circle key={i} cx={x} cy={y} r="2" style={{ fill: i % 2 ? 'var(--color-glow)' : 'var(--color-accent)' }} />
         ))}
       </g>
-      <circle cx="16" cy="16" r="4.2" fill="#ffffff" />
+      <circle cx="16" cy="16" r="4.2" fill="currentColor" />
     </svg>
   )
 }
+
+export const SunIcon = (props: IconProps) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" {...stroke} {...props}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" />
+  </svg>
+)
+
+export const MoonIcon = (props: IconProps) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" {...stroke} {...props}>
+    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
+  </svg>
+)
 
 export const CheckIcon = (props: IconProps) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" {...stroke} {...props}>

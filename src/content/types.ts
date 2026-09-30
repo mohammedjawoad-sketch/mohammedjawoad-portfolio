@@ -57,6 +57,8 @@ export interface Content {
     cta: string
     langSwitch: string
     langSwitchAria: string
+    themeToLight: string
+    themeToDark: string
     menu: string
     close: string
   }

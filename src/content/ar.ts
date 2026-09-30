@@ -21,6 +21,8 @@ export const ar: Content = {
     cta: 'تواصل معي',
     langSwitch: 'English',
     langSwitchAria: 'التبديل إلى الإنجليزية',
+    themeToLight: 'التبديل إلى الوضع الفاتح',
+    themeToDark: 'التبديل إلى الوضع الداكن',
     menu: 'القائمة',
     close: 'إغلاق القائمة',
   },

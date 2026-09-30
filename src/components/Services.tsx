@@ -108,7 +108,7 @@ export function Services({ onDiscuss }: { onDiscuss: (id: ServiceId) => void }) 
                         <motion.span
                           layoutId="service-indicator"
                           aria-hidden="true"
-                          className="absolute inset-y-3 start-0 w-[3px] rounded-full bg-accent shadow-[0_0_14px_rgb(69_220_255/0.8)]"
+                          className="absolute inset-y-3 start-0 w-[3px] rounded-full bg-accent shadow-[0_0_14px_rgb(var(--glow-rgb)/0.8)]"
                           transition={{ duration: 0.45, ease }}
                         />
                       )}
@@ -149,7 +149,7 @@ export function Services({ onDiscuss }: { onDiscuss: (id: ServiceId) => void }) 
               const open = item.id === active
               return (
                 <Reveal key={item.id} y={16}>
-                  <div className={cn('panel rounded-2xl transition-shadow', open && 'shadow-[inset_0_0_0_1px_rgb(122_162_255/0.45)]')}>
+                  <div className={cn('panel rounded-2xl transition-shadow', open && 'shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.45)]')}>
                     <h3>
                       <button
                         type="button"

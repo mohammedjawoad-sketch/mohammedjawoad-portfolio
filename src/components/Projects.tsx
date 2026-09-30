@@ -67,14 +67,14 @@ function ProjectCard({ project, index, total, progress, stacked }: CardProps) {
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{
             background:
-              'radial-gradient(28rem circle at var(--mx, 50%) var(--my, 50%), rgb(122 162 255 / 0.12), transparent 70%)',
+              'radial-gradient(28rem circle at var(--mx, 50%) var(--my, 50%), rgb(var(--accent-rgb) / 0.12), transparent 70%)',
           }}
         />
         <div className="relative lg:col-span-7">
           <p className="flex flex-wrap items-center gap-3 text-[0.9rem] text-mist">
             {project.client}
             {project.status && (
-              <span className="rounded-full bg-glow/10 px-2.5 py-0.5 text-[0.8rem] text-glow shadow-[inset_0_0_0_1px_rgb(69_220_255/0.35)]">
+              <span className="rounded-full bg-glow/10 px-2.5 py-0.5 text-[0.8rem] text-glow shadow-[inset_0_0_0_1px_rgb(var(--glow-rgb)/0.35)]">
                 {project.status}
               </span>
             )}

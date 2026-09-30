@@ -2,6 +2,10 @@
 // blue, cyan and violet halos, with a bloom pass, depth of field (near motes blur
 // into bokeh), a layer of drifting dust, and square fragments that peel off the shapes.
 //
+// In the light theme (uInk = 1) the same scene is drawn as ink on paper instead:
+// the palette comes in through uPal, motes become crisp dots with dark centres,
+// and ParticleField blends normally and skips the bloom.
+//
 // Five technology formations, one per part of the page. Particles and the
 // hairline connections share the geometry below, so both always line up.
 //
@@ -27,16 +31,19 @@ uniform float uIntensity;
 uniform float uGridCols;
 uniform float uCount;
 uniform float uFocus;
+uniform vec3 uPal[4];
+uniform float uInk;
 `
 
 const COMMON = /* glsl */ `
 const float PI = 3.14159265;
 const float TAU = 6.28318531;
 
-const vec3 WHITE  = vec3(1.0);
-const vec3 VIOLET = vec3(0.72, 0.6, 1.0);
-const vec3 CYAN   = vec3(0.3, 0.86, 1.0);
-const vec3 BLUE   = vec3(0.32, 0.48, 1.0);
+// Palette slots, filled per theme by ParticleField (WHITE is the emphasis colour).
+#define WHITE  uPal[0]
+#define VIOLET uPal[1]
+#define CYAN   uPal[2]
+#define BLUE   uPal[3]
 
 mat3 rotX(float a) { float c = cos(a), s = sin(a); return mat3(1.0, 0.0, 0.0, 0.0, c, s, 0.0, -s, c); }
 mat3 rotY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c); }
@@ -354,7 +361,7 @@ void main() {
     p = vec3((aSeed.x - 0.5) * uHalf.x * 2.8, 0.0, mix(-8.0, 5.8, aSeed2.x));
     p.y = mod(aSeed.y * rangeY + t * (0.06 + 0.1 * aSeed.z), rangeY) - rangeY * 0.5;
     p += flow(p * 0.25 + aSeed.w * 10.0, t * 0.35) * 0.4;
-    c = vec4(mix(mix(BLUE, VIOLET, aSeed.y), CYAN, aSeed.z * 0.7), 0.42);
+    c = vec4(mix(mix(BLUE, VIOLET, aSeed.y), CYAN, aSeed.z * 0.7), mix(0.42, 0.3, uInk));
     arrive = uIntro;
   } else {
     vec4 fc;
@@ -429,7 +436,8 @@ void main() {
   float fog = smoothstep(21.0, 6.0, depth);
   float variation = 0.35 + 0.65 * fract(aSeed.x * 13.7 + aSeed2.y * 7.1);
   float intensity = mix(uIntensity, 0.85, ambient);
-  vColor = min(c.rgb + glow * 0.4, vec3(1.0));
+  // The click ripple brightens light and darkens ink.
+  vColor = mix(min(c.rgb + glow * 0.4, vec3(1.0)), c.rgb * (1.0 - glow * 0.3), uInk);
   float facing = mix(1.0, clamp(0.5 + (uFocus - depth) / 5.0, 0.0, 1.0), 1.0 - ambient);
   vAlpha = c.a * variation * arrive * fog * intensity * mix(1.0, 0.2, blur) * (1.0 + glow * 0.8) * mix(0.35, 1.0, facing);
   vBlur = blur;
@@ -446,6 +454,7 @@ in float vAlpha;
 in float vBlur;
 in float vShape;
 in float vAngle;
+uniform highp float uInk;
 out vec4 outColor;
 
 void main() {
@@ -454,12 +463,14 @@ void main() {
   if (d > 0.5) discard;
 
   // In focus: a round mote or a small rotated square fragment, both with a halo.
+  // On paper the halo mostly goes and the mote tightens into a crisp dot.
   float cs = cos(vAngle);
   float sn = sin(vAngle);
   vec2 r = vec2(c.x * cs - c.y * sn, c.x * sn + c.y * cs);
   float square = max(abs(r.x), abs(r.y));
-  float halo = exp(-d * d * 9.0);
-  float mote = exp(-d * d * 42.0) + halo * 0.28;
+  float halo = exp(-d * d * 9.0) * mix(1.0, 0.18, uInk);
+  float spot = mix(exp(-d * d * 42.0), smoothstep(0.3, 0.16, d), uInk);
+  float mote = spot + halo * 0.28;
   float shard = smoothstep(0.23, 0.15, square) + halo * 0.2;
   float crisp = mix(mote, shard, vShape);
 
@@ -468,9 +479,13 @@ void main() {
   float rim = smoothstep(0.28, 0.46, d) * disc;
   float bokeh = disc * 0.5 + rim * 0.35;
 
-  // A white-hot centre inside the coloured halo, the way real light looks.
-  vec3 col = mix(vColor, vec3(1.0), exp(-d * d * 110.0) * (1.0 - vBlur) * 0.85);
+  // Light: a white-hot centre inside the coloured halo, the way real light looks.
+  // Ink: a denser, darker centre, the way a pen dot dries.
+  vec3 hot = mix(vec3(1.0), vColor * 0.45, uInk);
+  vec3 col = mix(vColor, hot, exp(-d * d * 110.0) * (1.0 - vBlur) * 0.85);
   float a = mix(crisp, bokeh, vBlur) * vAlpha;
+  // Ink: out-of-focus motes read as smudges on paper, so they fade out instead.
+  a = mix(a, min(a * (1.0 - vBlur * 0.75), 0.95), uInk);
   outColor = vec4(col * a, a);
 }
 `
@@ -572,9 +587,11 @@ export const LINE_FRAG = /* glsl */ `#version 300 es
 precision mediump float;
 in float vAlpha;
 in vec3 vColor;
+uniform highp float uInk;
 out vec4 outColor;
 void main() {
-  outColor = vec4(vColor * vAlpha, vAlpha);
+  float a = min(vAlpha * mix(1.0, 1.2, uInk), 1.0);
+  outColor = vec4(vColor * a, a);
 }
 `
 

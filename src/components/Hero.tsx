@@ -15,7 +15,7 @@ export function Hero() {
           {/* Soft shade behind the copy so it stays legible over the particles. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -inset-x-5 -inset-y-16 -z-10 bg-[radial-gradient(closest-side,rgb(5_7_15/0.5),transparent)] lg:hidden"
+            className="pointer-events-none absolute -inset-x-5 -inset-y-16 -z-10 bg-[radial-gradient(closest-side,rgb(var(--ink-rgb)/0.5),transparent)] lg:hidden"
           />
 
           <p className="rise inline-flex items-center gap-3 text-[0.9rem] text-mist" style={vars({ '--d': '120ms' })}>

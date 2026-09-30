@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n'
+import { useTheme } from '../theme'
 import { FORMATIONS, ParticleField } from './ParticleField'
 
 const INTERACTIVE = 'a, button, input, textarea, select, label, summary, [role="tab"]'
@@ -47,6 +48,9 @@ export function ParticleBackground() {
   const { dir } = useI18n()
   const dirRef = useRef(dir)
   dirRef.current = dir
+  const { theme } = useTheme()
+  const themeRef = useRef(theme)
+  themeRef.current = theme
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -65,6 +69,7 @@ export function ParticleBackground() {
         maxDpr: small ? 1.75 : 2,
         skipIntro: og,
         rtl: dirRef.current === 'rtl',
+        light: themeRef.current === 'light',
       })
     } catch (error) {
       console.warn('[particles] falling back to static background:', error)
@@ -132,6 +137,12 @@ export function ParticleBackground() {
       fieldRef.current = null
     }
   }, [])
+
+  // Switch palette in the same commit as the page colours, so the theme
+  // transition never shows glowing light on the light page.
+  useLayoutEffect(() => {
+    fieldRef.current?.setTheme(theme === 'light')
+  }, [theme])
 
   // Formations move to the other side of the screen when the layout flips to RTL,
   // and section heights change with the language, so recompute both.

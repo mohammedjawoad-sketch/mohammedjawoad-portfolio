@@ -22,6 +22,7 @@ Add `?lang=ar` to the address to open the Arabic version directly.
 | All English text | `src/content/en.ts` |
 | All Arabic text | `src/content/ar.ts` |
 | Email, WhatsApp, LinkedIn, case-studies link | `src/site.config.ts` |
+| Colours, dark and light themes | `src/index.css` (`@theme` is dark; `:root[data-theme='light']` overrides it); particle colours per theme in `src/particles/ParticleField.ts` (`PALETTES`) |
 | Domain (canonical link, LinkedIn preview, sitemap) | `.env` (`VITE_SITE_URL`) |
 | Your CV | `cv/cv.html` (kept local, out of the repository), then `npm run cv:pdf`: it writes `cv/Mohammed-Jawoad-Ali-CV.pdf` and copies it to `public/Mohammed-Jawoad-CV.pdf`, the file behind the site's "Download CV" buttons |
 

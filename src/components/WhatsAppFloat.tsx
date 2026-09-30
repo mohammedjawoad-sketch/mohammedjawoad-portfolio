@@ -39,7 +39,7 @@ export function WhatsAppFloat() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={t.float.whatsapp}
-          className="og-hide group fixed bottom-5 end-5 z-30 flex items-center rounded-full bg-accent p-3.5 text-ink shadow-[0_0_36px_-6px_rgb(69_220_255/0.55)] md:bottom-7 md:end-7"
+          className="og-hide group fixed bottom-5 end-5 z-30 flex items-center rounded-full bg-accent p-3.5 text-ink shadow-[0_0_36px_-6px_rgb(var(--glow-rgb)/0.55)] md:bottom-7 md:end-7"
           initial={{ opacity: 0, scale: 0.6, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.6, y: 20 }}

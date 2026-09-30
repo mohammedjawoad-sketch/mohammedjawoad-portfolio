@@ -24,6 +24,16 @@ export interface FieldOptions {
   maxDpr: number
   skipIntro?: boolean
   rtl?: boolean
+  /** Draw as ink on a light page instead of light on a dark one. */
+  light?: boolean
+}
+
+// WHITE (emphasis), VIOLET, CYAN, BLUE, in the order shaders.ts reads uPal.
+const PALETTES = {
+  // Coloured light on a night sky.
+  dark: new Float32Array([1, 1, 1, 0.72, 0.6, 1.0, 0.3, 0.86, 1.0, 0.32, 0.48, 1.0]),
+  // Blue ink on paper: emphasis becomes the deepest ink rather than white.
+  light: new Float32Array([0.05, 0.09, 0.36, 0.42, 0.26, 0.9, 0.02, 0.48, 0.64, 0.14, 0.28, 0.79]),
 }
 
 interface Target {
@@ -49,6 +59,8 @@ const SHARED_UNIFORMS = [
   'uGridCols',
   'uCount',
   'uFocus',
+  'uPal',
+  'uInk',
 ] as const
 const PARTICLE_ONLY = ['uScatter', 'uPixel', 'uMaxPoint', 'uHalf'] as const
 
@@ -170,6 +182,8 @@ export class ParticleField {
   private bloomA: Target | null = null
   private bloomB: Target | null = null
   private bloom = true
+  private ink = 0
+  private palette = PALETTES.dark
   private lineVertexCount = 0
 
   private readonly count: number
@@ -221,6 +235,7 @@ export class ParticleField {
     this.intro = options.skipIntro || options.reducedMotion ? 1 : 0
     this.weights[0] = 1
     this.target[0] = 1
+    this.setTheme(Boolean(options.light))
 
     canvas.addEventListener('webglcontextlost', this.onContextLost)
     canvas.addEventListener('webglcontextrestored', this.onContextRestored)
@@ -301,7 +316,12 @@ export class ParticleField {
     gl.bindVertexArray(null)
 
     gl.disable(gl.DEPTH_TEST)
-    gl.blendFunc(gl.ONE, gl.ONE)
+  }
+
+  /** Light theme: ink on paper (normal blending, no bloom). Dark theme: additive light. */
+  setTheme(light: boolean) {
+    this.ink = light ? 1 : 0
+    this.palette = light ? PALETTES.light : PALETTES.dark
   }
 
   private makeTarget(w: number, h: number): Target {
@@ -524,6 +544,8 @@ export class ParticleField {
     gl.uniform1f(loc.uGridCols, this.gridCols)
     gl.uniform1f(loc.uCount, this.count)
     gl.uniform1f(loc.uFocus, CAMERA_Z - s.oz)
+    gl.uniform3fv(loc.uPal, this.palette)
+    gl.uniform1f(loc.uInk, this.ink)
   }
 
   /** Particles and connections, at the given resolution scale (1 for screen, 0.5 for the glow). */
@@ -553,7 +575,10 @@ export class ParticleField {
     const s = this.frameState
     const A = this.bloomA
     const B = this.bloomB
-    const useBloom = this.bloom && A && B && this.blurProgram && this.compositeProgram
+    // Glow only makes sense as light on a dark page; ink is drawn crisp and layered normally.
+    const useBloom = !this.ink && this.bloom && A && B && this.blurProgram && this.compositeProgram
+    if (this.ink) gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
+    else gl.blendFunc(gl.ONE, gl.ONE)
 
     if (useBloom) {
       // 1. Scene into a half-resolution target.

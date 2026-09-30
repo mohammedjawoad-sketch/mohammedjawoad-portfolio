@@ -21,6 +21,8 @@ export const en: Content = {
     cta: 'Get in touch',
     langSwitch: 'العربية',
     langSwitchAria: 'Switch to Arabic',
+    themeToLight: 'Switch to light mode',
+    themeToDark: 'Switch to dark mode',
     menu: 'Menu',
     close: 'Close menu',
   },

@@ -35,7 +35,7 @@ export function Process() {
               >
                 <span
                   aria-hidden="true"
-                  className="num relative z-10 flex size-11 flex-none items-center justify-center rounded-full bg-ink text-[0.95rem] font-semibold text-accent shadow-[inset_0_0_0_1px_rgb(122_162_255/0.55),0_0_24px_-6px_rgb(69_220_255/0.5)]"
+                  className="num relative z-10 flex size-11 flex-none items-center justify-center rounded-full bg-ink text-[0.95rem] font-semibold text-accent shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.55),0_0_24px_-6px_rgb(var(--glow-rgb)/0.5)]"
                 >
                   {String(i + 1).padStart(2, '0')}
                 </span>
