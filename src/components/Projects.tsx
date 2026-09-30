@@ -102,6 +102,20 @@ function ProjectCard({ project, index, total, progress, stacked }: CardProps) {
               </li>
             ))}
           </ul>
+
+          {project.caseStudy && (
+            <p className="mt-7">
+              <a
+                href={`${site.caseStudies}#${project.caseStudy}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 rounded-lg text-[0.95rem] text-accent-soft underline decoration-accent/40 underline-offset-4 transition-colors hover:text-bone hover:decoration-bone/60"
+              >
+                <GitHubIcon className="size-[1.05rem] flex-none" />
+                {labels.caseStudyLink}
+              </a>
+            </p>
+          )}
         </div>
         <div className="relative lg:col-span-5">
           <FlowDiagram steps={project.flow} label={labels.flowLabel} />
@@ -147,7 +161,67 @@ export function Projects() {
             />
           ))}
         </div>
+        <GitHubRepos />
       </div>
     </section>
+  )
+}
+
+/** Public repositories: the code that can be shared, next to the private work above. */
+function GitHubRepos() {
+  const { t } = useI18n()
+  const g = t.projects.github
+  return (
+    <div className="mt-24 md:mt-32">
+      <Reveal className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+        <div>
+          <h3 className="t-h3 flex items-center gap-3">
+            <GitHubIcon className="size-6 flex-none text-bone" />
+            {g.title}
+          </h3>
+          <p className="mt-3 max-w-2xl text-mist">{g.intro}</p>
+        </div>
+        <a
+          href={site.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost min-h-11 px-4 text-[0.925rem]"
+        >
+          {g.profile}
+        </a>
+      </Reveal>
+      <ul className="mt-8 grid gap-5 md:grid-cols-3">
+        {g.repos.map((repo, i) => (
+          <li key={repo.slug}>
+            <Reveal className="h-full" delay={0.06 * i}>
+              <a
+                href={`${site.github}/${repo.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="panel project-card group flex h-full flex-col rounded-2xl p-6 transition-shadow duration-300 hover:shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.5)]"
+              >
+                <span className="flex items-start justify-between gap-4">
+                  <span className="text-[1.15rem] font-semibold leading-snug text-bone [font-stretch:108%] rtl:[font-stretch:100%]">
+                    {repo.name}
+                  </span>
+                  <GitHubIcon className="mt-1 size-[1.1rem] flex-none text-mist transition-colors group-hover:text-accent" />
+                </span>
+                <span dir="ltr" className="mt-1 block text-[0.85rem] text-mist/80 rtl:text-end">
+                  {repo.slug}
+                </span>
+                <span className="mt-4 block text-[0.95rem] text-mist">{repo.description}</span>
+                <span className="mt-auto flex flex-wrap gap-2 pt-6" dir="ltr">
+                  {repo.stack.map((tech) => (
+                    <span key={tech} className="chip">
+                      {tech}
+                    </span>
+                  ))}
+                </span>
+              </a>
+            </Reveal>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

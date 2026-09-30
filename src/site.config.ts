@@ -6,6 +6,7 @@ export const site = {
   /** International format without "+" or spaces, as wa.me expects. */
   whatsapp: '9647725501097',
   linkedin: 'https://www.linkedin.com/in/mohammed-jawoad-219a75159',
+  github: 'https://github.com/mohammedjawoad-sketch',
   caseStudies: 'https://github.com/mohammedjawoad-sketch/erp-case-studies',
   /** In public/, copied there by `npm run cv:pdf`. */
   cvFile: 'Mohammed-Jawoad-CV.pdf',

@@ -35,6 +35,16 @@ export interface Project {
   results: string[]
   stack: string[]
   flow: string[]
+  /** Heading anchor of this project's write-up in the erp-case-studies README. */
+  caseStudy?: string
+}
+
+export interface Repo {
+  name: string
+  /** Repository name under the GitHub account in site.config.ts. */
+  slug: string
+  description: string
+  stack: string[]
 }
 
 export interface Role {
@@ -101,7 +111,14 @@ export interface Content {
     stackLabel: string
     flowLabel: string
     caseStudies: string
+    caseStudyLink: string
     items: Project[]
+    github: {
+      title: string
+      intro: string
+      profile: string
+      repos: Repo[]
+    }
   }
   process: {
     title: string

@@ -2,9 +2,9 @@ import type { Content } from './types'
 
 export const en: Content = {
   meta: {
-    title: 'Mohammed Jawoad | Senior ERP Consultant and Odoo Developer',
+    title: 'Mohammed Jawoad | Senior SAP Consultant and Software Engineer',
     description:
-      'SAP Business One, SAP S/4HANA, Odoo and ERPNext consultant and developer in Baghdad. Implementation, custom apps connected to SAP, financial reporting and consolidation, and ongoing support.',
+      'SAP Business One and SAP S/4HANA consultant and software engineer in Baghdad: SAP implementation, applications and integrations built on the Service Layer and HANA, and financial reporting. Also Odoo and ERPNext.',
   },
   nav: {
     brand: 'Mohammed Jawoad',
@@ -27,15 +27,15 @@ export const en: Content = {
     close: 'Close menu',
   },
   hero: {
-    status: 'Open to ERP consultant roles and consulting projects',
+    status: 'Open to SAP and software engineering roles, and consulting projects',
     nameLines: ['Mohammed', 'Jawoad'],
     altName: 'محمد جواد',
-    role: 'Senior ERP consultant and Odoo developer',
+    role: 'Senior SAP consultant and software engineer',
     pitch:
-      'I implement SAP Business One, SAP S/4HANA, Odoo and ERPNext, and build the approvals, portals and reports your team needs around them, so finance and operations work from the same numbers.',
+      'I implement SAP Business One and SAP S/4HANA, and engineer the software around them: apps, integrations and reports on the Service Layer and HANA, so finance and operations work from the same numbers. I also implement Odoo and ERPNext.',
     ctaPrimary: 'Download CV',
     ctaSecondary: 'See my projects',
-    platforms: ['SAP Business One', 'SAP S/4HANA', 'SAP HANA', 'Odoo', 'ERPNext'],
+    platforms: ['SAP Business One', 'SAP S/4HANA', 'SAP HANA', 'TypeScript', 'Node.js', 'Odoo', 'ERPNext'],
     scroll: 'Scroll',
   },
   ledger: {
@@ -53,7 +53,7 @@ export const en: Content = {
   services: {
     title: 'What I can do for your company',
     intro:
-      'Pick one service or combine them. Every engagement covers the business process as well as the system.',
+      'SAP consulting and software engineering first, with Odoo and ERPNext where they fit better. Every engagement covers the business process as well as the system.',
     whatYouGet: 'What you get',
     tools: 'Tools',
     cta: 'Discuss this service',
@@ -72,43 +72,17 @@ export const en: Content = {
         tools: ['SAP S/4HANA', 'SAP B1 10.0 on HANA', 'Crystal Reports', 'B1if', 'SAP Customer Checkout'],
       },
       {
-        id: 'odoo',
-        name: 'Odoo implementation and custom modules',
-        short: 'Odoo',
-        summary:
-          'Odoo Community or Enterprise configured for how your company works, with custom modules where the standard apps stop.',
-        outcomes: [
-          'Accounting, sales, purchasing and inventory set up for your processes',
-          'Custom modules built to Odoo conventions',
-          'Requirements, testing and go-live support',
-        ],
-        tools: ['Odoo Community', 'Odoo Enterprise', 'Custom modules', 'PostgreSQL'],
-      },
-      {
-        id: 'erpnext',
-        name: 'ERPNext implementation',
-        short: 'ERPNext',
-        summary:
-          'Accounting, buying, selling, stock and manufacturing configured around the way your company already runs.',
-        outcomes: [
-          'Workflows configured from your real processes',
-          'Testing and UAT with your process owners',
-          'User training and process documentation',
-        ],
-        tools: ['ERPNext', 'Accounting', 'Stock', 'Manufacturing'],
-      },
-      {
         id: 'apps',
-        name: 'Custom apps connected to SAP',
-        short: 'Custom app or integration',
+        name: 'Software engineering around SAP',
+        short: 'Custom software or integration',
         summary:
-          'Web and mobile apps that read from and post to SAP Business One through the Service Layer and HANA, replacing paper forms, spreadsheets and manual approvals.',
+          'Web and mobile applications that read from and post to SAP Business One through the Service Layer and HANA, engineered to replace paper forms, spreadsheets and manual approvals.',
         outcomes: [
           'Approvals on mobile with push notifications',
           'Journal entries, payments and transfers posted straight to SAP',
           'Arabic and English interfaces with role-based access and audit trails',
         ],
-        tools: ['SAP Service Layer', 'SAP HANA', 'TypeScript', 'React', 'Node.js'],
+        tools: ['TypeScript', 'React', 'Node.js', 'SAP Service Layer', 'SAP HANA'],
       },
       {
         id: 'reporting',
@@ -136,6 +110,32 @@ export const en: Content = {
         ],
         tools: ['Windows Server', 'Linux', 'Caddy', 'Cloudflare Tunnel', 'Docker'],
       },
+      {
+        id: 'odoo',
+        name: 'Odoo implementation and custom modules',
+        short: 'Odoo',
+        summary:
+          'Odoo Community or Enterprise configured for how your company works, with custom modules where the standard apps stop.',
+        outcomes: [
+          'Accounting, sales, purchasing and inventory set up for your processes',
+          'Custom modules built to Odoo conventions',
+          'Requirements, testing and go-live support',
+        ],
+        tools: ['Odoo Community', 'Odoo Enterprise', 'Custom modules', 'PostgreSQL'],
+      },
+      {
+        id: 'erpnext',
+        name: 'ERPNext implementation',
+        short: 'ERPNext',
+        summary:
+          'Accounting, buying, selling, stock and manufacturing configured around the way your company already runs.',
+        outcomes: [
+          'Workflows configured from your real processes',
+          'Testing and UAT with your process owners',
+          'User training and process documentation',
+        ],
+        tools: ['ERPNext', 'Accounting', 'Stock', 'Manufacturing'],
+      },
     ],
   },
   engagements: {
@@ -145,14 +145,14 @@ export const en: Content = {
     items: [
       {
         icon: 'implement',
-        name: 'ERP implementation',
-        body: 'A fixed-scope project to take SAP Business One, Odoo or ERPNext live: discovery, configuration, testing, go-live and training.',
+        name: 'SAP implementation',
+        body: 'A fixed-scope project to take SAP Business One live, or Odoo or ERPNext where they fit better: discovery, configuration, testing, go-live and training.',
         fit: 'Companies moving off spreadsheets or an old system',
       },
       {
         icon: 'build',
-        name: 'Custom development',
-        body: 'A portal, approval flow, integration or report pack built around the ERP you already run.',
+        name: 'Software engineering',
+        body: 'A portal, approval flow, integration or report pack engineered around the SAP system you already run.',
         fit: 'Teams whose ERP works but who still rely on manual steps',
       },
       {
@@ -171,6 +171,7 @@ export const en: Content = {
     stackLabel: 'Built with',
     flowLabel: 'How it connects',
     caseStudies: 'Read the full case studies on GitHub',
+    caseStudyLink: 'Read the case study on GitHub',
     items: [
       {
         name: 'Group Finance Manager Portal',
@@ -183,6 +184,7 @@ export const en: Content = {
         ],
         stack: ['SAP HANA', 'Node.js', 'Express', 'React', 'TypeScript'],
         flow: ['Seven SAP B1 companies', 'SAP HANA', 'Consolidation API', 'Finance manager portal'],
+        caseStudy: 'group-finance-manager-portal',
       },
       {
         name: 'Operations and Finance Monitoring Platform',
@@ -192,6 +194,7 @@ export const en: Content = {
         results: ['10 access roles, audit-logged evidence exports and certificate-validated connections'],
         stack: ['SAP Service Layer', 'SAP Customer Checkout', 'B1if', 'PostgreSQL', 'React'],
         flow: ['SAP B1 and Customer Checkout', 'Service Layer and B1if', 'PostgreSQL', '20 role-based workspaces'],
+        caseStudy: 'operations-and-finance-monitoring-platform',
       },
       {
         name: 'AP Payment Approval Portal',
@@ -204,6 +207,7 @@ export const en: Content = {
         ],
         stack: ['SAP Service Layer', 'Node.js', 'React PWA', 'SQL Server', 'Web Push'],
         flow: ['Open AP invoices', 'Payment request', 'Finance manager approval on mobile', 'SAP outgoing payment'],
+        caseStudy: 'ap-payment-approval-portal',
       },
       {
         name: 'Finance Posting Portal',
@@ -213,6 +217,7 @@ export const en: Content = {
         results: ['Recoverable drafts and role controls for finance staff'],
         stack: ['SAP Service Layer', 'Hono', 'tRPC', 'React', 'SQL Server'],
         flow: ['Finance team', 'Validated draft', 'SAP Service Layer', 'Journal entries and payments'],
+        caseStudy: 'finance-posting-portal',
       },
       {
         name: 'Fleet and Sales Applications',
@@ -225,6 +230,7 @@ export const en: Content = {
         ],
         stack: ['SAP Service Layer', 'SAP API Gateway', 'Crystal Reports', 'Node.js', 'React'],
         flow: ['Driver submission', 'Manager approval', 'SAP attachments', 'Reports and exports'],
+        caseStudy: 'fleet-and-sales-applications',
       },
       {
         name: 'Smart Enterprise Workspace',
@@ -237,8 +243,38 @@ export const en: Content = {
         ],
         stack: ['React', 'TypeScript', 'Vitest', 'Playwright', 'GitHub Actions'],
         flow: ['Planning and production', 'Batch tracing and inventory', 'Finance and approvals', 'Smart notifications'],
+        caseStudy: 'smart-enterprise-workspace',
       },
     ],
+    github: {
+      title: 'On GitHub',
+      intro:
+        'Code and write-ups I can share publicly. The applications above belong to the company, so their case studies are published instead of the code.',
+      profile: 'All repositories',
+      repos: [
+        {
+          name: 'SAP B1 Ticket System',
+          slug: 'sapb1ticketsystem',
+          description:
+            'Support ticket system for SAP Business One teams: tickets, tasks, comments, companies and users, with email and Telegram notifications.',
+          stack: ['React', 'Node.js', 'Express', 'MongoDB'],
+        },
+        {
+          name: 'ERP case studies',
+          slug: 'erp-case-studies',
+          description:
+            'Write-ups of the seven applications above: the problem each one solved, how it connects to SAP, and the results.',
+          stack: ['SAP Business One', 'SAP HANA', 'Service Layer'],
+        },
+        {
+          name: 'This website',
+          slug: 'mohammedjawoad-portfolio',
+          description:
+            'The source of this site: React and TypeScript with a WebGL2 particle engine, in English and Arabic, with light and dark themes.',
+          stack: ['React', 'TypeScript', 'WebGL2'],
+        },
+      ],
+    },
   },
   process: {
     title: 'How a project runs',
@@ -268,7 +304,7 @@ export const en: Content = {
   },
   experience: {
     title: 'Experience',
-    intro: 'Eight years across ERP consulting, development and the infrastructure underneath.',
+    intro: 'Eight years across ERP consulting, software engineering and the infrastructure underneath.',
     roles: [
       {
         company: 'Al-Rafidain Group',
@@ -317,7 +353,7 @@ export const en: Content = {
   about: {
     title: 'About me',
     paragraphs: [
-      "I'm an ERP consultant and developer based in Baghdad. I started out running servers and networks, moved into ERPNext implementation, and then led SAP Business One for a group running more than seven companies on it.",
+      "I'm an SAP consultant and software engineer based in Baghdad. I started out running servers and networks, moved into ERPNext implementation, and then led SAP Business One for a group running more than seven companies on it, building the software around it as well.",
       "Clients get both sides from one person: enough finance, procurement and inventory knowledge to design the process, and the engineering to build what the standard system doesn't do.",
       "It's fitting work for someone from Iraq. The oldest written records we have, pressed into clay in southern Mesopotamia more than 5,000 years ago, are accounts.",
     ],
@@ -345,8 +381,21 @@ export const en: Content = {
         ],
       },
       {
-        name: 'Odoo and ERPNext',
-        items: ['Odoo Community', 'Odoo Enterprise', 'Custom Odoo modules', 'ERPNext'],
+        name: 'Software engineering',
+        items: [
+          'TypeScript',
+          'JavaScript',
+          'Node.js',
+          'Express',
+          'Hono',
+          'tRPC',
+          'React',
+          'REST APIs',
+          'SAP HANA SQL',
+          'SQL Server',
+          'PostgreSQL',
+          'Stored procedures',
+        ],
       },
       {
         name: 'Finance and operations',
@@ -366,23 +415,6 @@ export const en: Content = {
         ],
       },
       {
-        name: 'Development',
-        items: [
-          'TypeScript',
-          'JavaScript',
-          'Node.js',
-          'Express',
-          'Hono',
-          'tRPC',
-          'React',
-          'REST APIs',
-          'SAP HANA SQL',
-          'SQL Server',
-          'PostgreSQL',
-          'Stored procedures',
-        ],
-      },
-      {
         name: 'Infrastructure and security',
         items: [
           'Windows Server',
@@ -397,6 +429,10 @@ export const en: Content = {
           'Networking',
         ],
       },
+      {
+        name: 'Odoo and ERPNext',
+        items: ['Odoo Community', 'Odoo Enterprise', 'Custom Odoo modules', 'ERPNext'],
+      },
     ],
   },
   faq: {
@@ -404,7 +440,7 @@ export const en: Content = {
     items: [
       {
         q: 'Are you open to full-time roles?',
-        a: "Yes. I'm open to on-site and hybrid ERP consultant roles, and to consulting projects. You can download my CV at the top of this page or message me directly.",
+        a: "Yes. I'm open to on-site and hybrid SAP consultant and software engineering roles, and to consulting projects. You can download my CV at the top of this page or message me directly.",
       },
       {
         q: 'Which ERP is right for my company?',
@@ -433,7 +469,7 @@ export const en: Content = {
     ],
   },
   contact: {
-    title: 'Hiring for an ERP role, or planning a project?',
+    title: 'Hiring for an SAP role, or planning a project?',
     intro:
       "Share a few details about the role, or about your company and the problem you want solved. I'll reply with questions or a time for a call.",
     form: {
@@ -470,7 +506,7 @@ export const en: Content = {
     },
   },
   footer: {
-    tagline: 'SAP Business One, SAP S/4HANA, Odoo and ERPNext consulting and development.',
+    tagline: 'SAP consulting and software engineering, plus Odoo and ERPNext.',
     top: 'Back to top',
   },
   float: {

@@ -2,9 +2,9 @@ import type { Content } from './types'
 
 export const ar: Content = {
   meta: {
-    title: 'محمد جواد | استشاري أول لأنظمة ERP ومطوّر Odoo',
+    title: 'محمد جواد | استشاري أول لـ SAP ومهندس برمجيات',
     description:
-      'استشاري ومطوّر SAP Business One و SAP S/4HANA و Odoo و ERPNext في بغداد. تنفيذ الأنظمة، تطبيقات مخصصة مرتبطة بـ SAP، التقارير المالية وتوحيد الشركات، والدعم المستمر.',
+      'استشاري SAP Business One و SAP S/4HANA ومهندس برمجيات في بغداد: تنفيذ SAP، وتطبيقات وتكاملات مبنية على Service Layer و HANA، والتقارير المالية. وأيضاً Odoo و ERPNext.',
   },
   nav: {
     brand: 'محمد جواد',
@@ -27,15 +27,15 @@ export const ar: Content = {
     close: 'إغلاق القائمة',
   },
   hero: {
-    status: 'متاح لوظائف استشاري ERP ولمشاريع الاستشارات',
+    status: 'متاح لوظائف SAP وهندسة البرمجيات ولمشاريع الاستشارات',
     nameLines: ['محمد', 'جواد'],
     altName: 'Mohammed Jawoad',
-    role: 'استشاري أول لأنظمة ERP ومطوّر Odoo',
+    role: 'استشاري أول لـ SAP ومهندس برمجيات',
     pitch:
-      'أنفّذ أنظمة SAP Business One و SAP S/4HANA و Odoo و ERPNext، وأبني حولها الموافقات والبوابات والتقارير التي يحتاجها فريقك، حتى تعمل المالية والعمليات على الأرقام نفسها.',
+      'أنفّذ SAP Business One و SAP S/4HANA، وأبني البرمجيات حولهما: تطبيقات وتكاملات وتقارير على Service Layer و HANA، حتى تعمل المالية والعمليات على الأرقام نفسها. وأنفّذ أيضاً Odoo و ERPNext.',
     ctaPrimary: 'تحميل السيرة الذاتية',
     ctaSecondary: 'اطّلع على مشاريعي',
-    platforms: ['SAP Business One', 'SAP S/4HANA', 'SAP HANA', 'Odoo', 'ERPNext'],
+    platforms: ['SAP Business One', 'SAP S/4HANA', 'SAP HANA', 'TypeScript', 'Node.js', 'Odoo', 'ERPNext'],
     scroll: 'مرّر',
   },
   ledger: {
@@ -52,7 +52,7 @@ export const ar: Content = {
   },
   services: {
     title: 'ما الذي يمكنني تقديمه لشركتك',
-    intro: 'اختر خدمة واحدة أو اجمع بينها. كل مشروع يغطي العملية التجارية والنظام معاً.',
+    intro: 'استشارات SAP وهندسة البرمجيات أولاً، مع Odoo و ERPNext حيث يكونان الأنسب. كل مشروع يغطي العملية التجارية والنظام معاً.',
     whatYouGet: 'ما الذي ستحصل عليه',
     tools: 'الأدوات',
     cta: 'ناقش هذه الخدمة',
@@ -71,42 +71,17 @@ export const ar: Content = {
         tools: ['SAP S/4HANA', 'SAP B1 10.0 on HANA', 'Crystal Reports', 'B1if', 'SAP Customer Checkout'],
       },
       {
-        id: 'odoo',
-        name: 'تنفيذ Odoo ووحدات مخصصة',
-        short: 'Odoo',
-        summary:
-          'إعداد Odoo بنسختيه Community و Enterprise وفق طريقة عمل شركتك، مع وحدات مخصصة حيث تتوقف التطبيقات القياسية.',
-        outcomes: [
-          'إعداد المحاسبة والمبيعات والمشتريات والمخزون وفق عملياتك',
-          'وحدات مخصصة مبنية وفق معايير Odoo',
-          'تحليل المتطلبات والاختبار ودعم التشغيل',
-        ],
-        tools: ['Odoo Community', 'Odoo Enterprise', 'وحدات مخصصة', 'PostgreSQL'],
-      },
-      {
-        id: 'erpnext',
-        name: 'تنفيذ ERPNext',
-        short: 'ERPNext',
-        summary: 'إعداد المحاسبة والمشتريات والمبيعات والمخزون والتصنيع حول الطريقة التي تعمل بها شركتك فعلاً.',
-        outcomes: [
-          'مسارات عمل مبنية على عملياتك الحقيقية',
-          'اختبارات قبول مع أصحاب العمليات',
-          'تدريب المستخدمين وتوثيق الإجراءات',
-        ],
-        tools: ['ERPNext', 'المحاسبة', 'المخزون', 'التصنيع'],
-      },
-      {
         id: 'apps',
-        name: 'تطبيقات مخصصة مرتبطة بـ SAP',
-        short: 'تطبيق أو تكامل مخصص',
+        name: 'هندسة البرمجيات حول SAP',
+        short: 'برمجيات أو تكامل مخصص',
         summary:
-          'تطبيقات ويب وجوال تقرأ من SAP Business One وترحّل إليه عبر Service Layer و HANA، بدلاً من النماذج الورقية وجداول Excel والموافقات اليدوية.',
+          'تطبيقات ويب وجوال تقرأ من SAP Business One وترحّل إليه عبر Service Layer و HANA، مصمّمة لتحل محل النماذج الورقية وجداول Excel والموافقات اليدوية.',
         outcomes: [
           'موافقات من الهاتف مع إشعارات فورية',
           'ترحيل القيود والمدفوعات والتحويلات مباشرة إلى SAP',
           'واجهات عربية وإنجليزية مع صلاحيات حسب الدور وسجل تدقيق',
         ],
-        tools: ['SAP Service Layer', 'SAP HANA', 'TypeScript', 'React', 'Node.js'],
+        tools: ['TypeScript', 'React', 'Node.js', 'SAP Service Layer', 'SAP HANA'],
       },
       {
         id: 'reporting',
@@ -134,6 +109,31 @@ export const ar: Content = {
         ],
         tools: ['Windows Server', 'Linux', 'Caddy', 'Cloudflare Tunnel', 'Docker'],
       },
+      {
+        id: 'odoo',
+        name: 'تنفيذ Odoo ووحدات مخصصة',
+        short: 'Odoo',
+        summary:
+          'إعداد Odoo بنسختيه Community و Enterprise وفق طريقة عمل شركتك، مع وحدات مخصصة حيث تتوقف التطبيقات القياسية.',
+        outcomes: [
+          'إعداد المحاسبة والمبيعات والمشتريات والمخزون وفق عملياتك',
+          'وحدات مخصصة مبنية وفق معايير Odoo',
+          'تحليل المتطلبات والاختبار ودعم التشغيل',
+        ],
+        tools: ['Odoo Community', 'Odoo Enterprise', 'وحدات مخصصة', 'PostgreSQL'],
+      },
+      {
+        id: 'erpnext',
+        name: 'تنفيذ ERPNext',
+        short: 'ERPNext',
+        summary: 'إعداد المحاسبة والمشتريات والمبيعات والمخزون والتصنيع حول الطريقة التي تعمل بها شركتك فعلاً.',
+        outcomes: [
+          'مسارات عمل مبنية على عملياتك الحقيقية',
+          'اختبارات قبول مع أصحاب العمليات',
+          'تدريب المستخدمين وتوثيق الإجراءات',
+        ],
+        tools: ['ERPNext', 'المحاسبة', 'المخزون', 'التصنيع'],
+      },
     ],
   },
   engagements: {
@@ -143,14 +143,14 @@ export const ar: Content = {
     items: [
       {
         icon: 'implement',
-        name: 'تنفيذ نظام ERP',
-        body: 'مشروع بنطاق محدد لتشغيل SAP Business One أو Odoo أو ERPNext: دراسة، إعداد، اختبار، تشغيل وتدريب.',
+        name: 'تنفيذ SAP',
+        body: 'مشروع بنطاق محدد لتشغيل SAP Business One، أو Odoo أو ERPNext حيث يكونان الأنسب: دراسة، إعداد، اختبار، تشغيل وتدريب.',
         fit: 'الشركات التي تنتقل من جداول Excel أو من نظام قديم',
       },
       {
         icon: 'build',
-        name: 'تطوير مخصص',
-        body: 'بوابة أو مسار موافقات أو تكامل أو حزمة تقارير تُبنى حول النظام الذي تعمل عليه حالياً.',
+        name: 'هندسة البرمجيات',
+        body: 'بوابة أو مسار موافقات أو تكامل أو حزمة تقارير تُبنى حول نظام SAP الذي تعمل عليه حالياً.',
         fit: 'الفرق التي يعمل نظامها لكنها ما زالت تعتمد على خطوات يدوية',
       },
       {
@@ -168,6 +168,7 @@ export const ar: Content = {
     stackLabel: 'التقنيات',
     flowLabel: 'كيف يترابط',
     caseStudies: 'اقرأ دراسات الحالة كاملة على GitHub',
+    caseStudyLink: 'اقرأ دراسة الحالة على GitHub',
     items: [
       {
         name: 'بوابة المدير المالي للمجموعة',
@@ -180,6 +181,7 @@ export const ar: Content = {
         ],
         stack: ['SAP HANA', 'Node.js', 'Express', 'React', 'TypeScript'],
         flow: ['سبع شركات على SAP B1', 'SAP HANA', 'واجهة برمجية للتوحيد', 'بوابة المدير المالي'],
+        caseStudy: 'group-finance-manager-portal',
       },
       {
         name: 'منصة مراقبة العمليات والمالية',
@@ -189,6 +191,7 @@ export const ar: Content = {
         results: ['10 أدوار صلاحيات، وتصدير أدلة مسجّل في سجل التدقيق، واتصالات موثّقة بالشهادات'],
         stack: ['SAP Service Layer', 'SAP Customer Checkout', 'B1if', 'PostgreSQL', 'React'],
         flow: ['SAP B1 و Customer Checkout', 'Service Layer و B1if', 'PostgreSQL', '20 مساحة عمل حسب الدور'],
+        caseStudy: 'operations-and-finance-monitoring-platform',
       },
       {
         name: 'بوابة موافقات دفعات الموردين',
@@ -198,6 +201,7 @@ export const ar: Content = {
         results: ['نقل موافقات دفعات الموردين من الورق إلى الهاتف', 'تتبّع كل طلب معتمد حتى الدفعة الصادرة في SAP'],
         stack: ['SAP Service Layer', 'Node.js', 'React PWA', 'SQL Server', 'Web Push'],
         flow: ['فواتير الموردين المفتوحة', 'طلب الدفع', 'موافقة المدير المالي من الهاتف', 'الدفعة الصادرة في SAP'],
+        caseStudy: 'ap-payment-approval-portal',
       },
       {
         name: 'بوابة الترحيل المالي',
@@ -207,6 +211,7 @@ export const ar: Content = {
         results: ['مسودات قابلة للاستعادة وصلاحيات حسب الدور لموظفي المالية'],
         stack: ['SAP Service Layer', 'Hono', 'tRPC', 'React', 'SQL Server'],
         flow: ['فريق المالية', 'مسودة مُتحقَّق منها', 'SAP Service Layer', 'القيود والمدفوعات'],
+        caseStudy: 'finance-posting-portal',
       },
       {
         name: 'تطبيقات الأسطول والمبيعات',
@@ -219,6 +224,7 @@ export const ar: Content = {
         ],
         stack: ['SAP Service Layer', 'SAP API Gateway', 'Crystal Reports', 'Node.js', 'React'],
         flow: ['رفع السائق', 'موافقة المدير', 'مرفقات SAP', 'التقارير والتصدير'],
+        caseStudy: 'fleet-and-sales-applications',
       },
       {
         name: 'مساحة العمل المؤسسية الذكية',
@@ -231,8 +237,36 @@ export const ar: Content = {
         ],
         stack: ['React', 'TypeScript', 'Vitest', 'Playwright', 'GitHub Actions'],
         flow: ['التخطيط والإنتاج', 'تتبّع الدُفعات والمخزون', 'المالية والموافقات', 'الإشعارات الذكية'],
+        caseStudy: 'smart-enterprise-workspace',
       },
     ],
+    github: {
+      title: 'على GitHub',
+      intro: 'أكواد ووثائق يمكنني نشرها علناً. التطبيقات أعلاه ملك للشركة، لذلك نشرت دراسات حالتها بدلاً من الكود.',
+      profile: 'كل المستودعات',
+      repos: [
+        {
+          name: 'نظام تذاكر SAP B1',
+          slug: 'sapb1ticketsystem',
+          description:
+            'نظام تذاكر دعم لفرق SAP Business One: التذاكر والمهام والتعليقات والشركات والمستخدمون، مع إشعارات بالبريد الإلكتروني وتيليجرام.',
+          stack: ['React', 'Node.js', 'Express', 'MongoDB'],
+        },
+        {
+          name: 'دراسات حالة ERP',
+          slug: 'erp-case-studies',
+          description: 'شرح للتطبيقات السبعة أعلاه: المشكلة التي حلّها كل تطبيق، وكيف يرتبط بـ SAP، والنتائج.',
+          stack: ['SAP Business One', 'SAP HANA', 'Service Layer'],
+        },
+        {
+          name: 'هذا الموقع',
+          slug: 'mohammedjawoad-portfolio',
+          description:
+            'الكود المصدري لهذا الموقع: React و TypeScript مع محرك جسيمات WebGL2، بالعربية والإنجليزية، بوضعين فاتح وداكن.',
+          stack: ['React', 'TypeScript', 'WebGL2'],
+        },
+      ],
+    },
   },
   process: {
     title: 'كيف يسير المشروع',
@@ -247,7 +281,7 @@ export const ar: Content = {
   },
   experience: {
     title: 'الخبرة',
-    intro: 'ثماني سنوات بين استشارات ERP والتطوير والبنية التحتية التي تقوم عليها.',
+    intro: 'ثماني سنوات بين استشارات ERP وهندسة البرمجيات والبنية التحتية التي تقوم عليها.',
     roles: [
       {
         company: 'مجموعة الرافدين',
@@ -296,7 +330,7 @@ export const ar: Content = {
   about: {
     title: 'نبذة عني',
     paragraphs: [
-      'أنا استشاري ومطوّر أنظمة ERP مقيم في بغداد. بدأت بإدارة الخوادم والشبكات، ثم انتقلت إلى تنفيذ ERPNext، وبعدها قدت SAP Business One في مجموعة تعمل عليه أكثر من سبع من شركاتها.',
+      'أنا استشاري SAP ومهندس برمجيات مقيم في بغداد. بدأت بإدارة الخوادم والشبكات، ثم انتقلت إلى تنفيذ ERPNext، وبعدها قدت SAP Business One في مجموعة تعمل عليه أكثر من سبع من شركاتها، وبنيت البرمجيات حوله أيضاً.',
       'يحصل عملائي على الجانبين من شخص واحد: فهم للمالية والمشتريات والمخزون يكفي لتصميم العملية، وقدرة تقنية على بناء ما لا يقدّمه النظام القياسي.',
       'وهو عمل يليق بمن جاء من العراق؛ فأقدم السجلات المكتوبة التي نعرفها، المنقوشة على ألواح الطين في جنوب بلاد الرافدين قبل أكثر من خمسة آلاف عام، كانت حسابات.',
     ],
@@ -324,8 +358,21 @@ export const ar: Content = {
         ],
       },
       {
-        name: 'Odoo و ERPNext',
-        items: ['Odoo Community', 'Odoo Enterprise', 'وحدات Odoo مخصصة', 'ERPNext'],
+        name: 'هندسة البرمجيات',
+        items: [
+          'TypeScript',
+          'JavaScript',
+          'Node.js',
+          'Express',
+          'Hono',
+          'tRPC',
+          'React',
+          'REST APIs',
+          'SAP HANA SQL',
+          'SQL Server',
+          'PostgreSQL',
+          'الإجراءات المخزنة',
+        ],
       },
       {
         name: 'المالية والعمليات',
@@ -345,23 +392,6 @@ export const ar: Content = {
         ],
       },
       {
-        name: 'التطوير',
-        items: [
-          'TypeScript',
-          'JavaScript',
-          'Node.js',
-          'Express',
-          'Hono',
-          'tRPC',
-          'React',
-          'REST APIs',
-          'SAP HANA SQL',
-          'SQL Server',
-          'PostgreSQL',
-          'الإجراءات المخزنة',
-        ],
-      },
-      {
         name: 'البنية التحتية والأمن',
         items: [
           'Windows Server',
@@ -376,6 +406,10 @@ export const ar: Content = {
           'الشبكات',
         ],
       },
+      {
+        name: 'Odoo و ERPNext',
+        items: ['Odoo Community', 'Odoo Enterprise', 'وحدات Odoo مخصصة', 'ERPNext'],
+      },
     ],
   },
   faq: {
@@ -383,7 +417,7 @@ export const ar: Content = {
     items: [
       {
         q: 'هل أنت متاح لوظيفة بدوام كامل؟',
-        a: 'نعم. أنا متاح لوظائف استشاري ERP حضورياً أو بنظام هجين، وكذلك لمشاريع الاستشارات. يمكنك تحميل سيرتي الذاتية من أعلى الصفحة أو مراسلتي مباشرة.',
+        a: 'نعم. أنا متاح لوظائف استشاري SAP وهندسة البرمجيات حضورياً أو بنظام هجين، وكذلك لمشاريع الاستشارات. يمكنك تحميل سيرتي الذاتية من أعلى الصفحة أو مراسلتي مباشرة.',
       },
       {
         q: 'ما نظام ERP المناسب لشركتي؟',
@@ -412,7 +446,7 @@ export const ar: Content = {
     ],
   },
   contact: {
-    title: 'تبحث عن استشاري ERP أو تخطط لمشروع؟',
+    title: 'تبحث عن استشاري SAP أو تخطط لمشروع؟',
     intro: 'شاركني بعض التفاصيل عن الوظيفة، أو عن شركتك والمشكلة التي تريد حلها، وسأرد بأسئلة أو بموعد لمكالمة.',
     form: {
       title: 'رسالتك',
@@ -448,7 +482,7 @@ export const ar: Content = {
     },
   },
   footer: {
-    tagline: 'استشارات وتطوير SAP Business One و SAP S/4HANA و Odoo و ERPNext.',
+    tagline: 'استشارات SAP وهندسة البرمجيات، إضافة إلى Odoo و ERPNext.',
     top: 'العودة إلى الأعلى',
   },
   float: {
