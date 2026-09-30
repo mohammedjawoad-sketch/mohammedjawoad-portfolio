@@ -247,31 +247,54 @@ export const en: Content = {
       },
     ],
     github: {
-      title: 'On GitHub',
+      title: 'The seven projects on GitHub',
       intro:
-        'Code and write-ups I can share publicly. The applications above belong to the company, so their case studies are published instead of the code.',
-      profile: 'All repositories',
-      repos: [
+        'Each application has its own write-up on GitHub: the problem, how it connects to SAP, and the results. The code belongs to the company, so it stays private.',
+      readLink: 'Case study on GitHub',
+      all: 'All seven write-ups in one repository',
+      allAction: 'Open on GitHub',
+      items: [
         {
-          name: 'SAP B1 Ticket System',
-          slug: 'sapb1ticketsystem',
-          description:
-            'Support ticket system for SAP Business One teams: tickets, tasks, comments, companies and users, with email and Telegram notifications.',
-          stack: ['React', 'Node.js', 'Express', 'MongoDB'],
+          name: 'Group Finance Manager Portal',
+          client: 'Group finance, seven companies',
+          summary: 'Consolidated statements across seven SAP companies: 54 reports on SAP HANA, 23 of 23 checks matched.',
+          caseStudy: 'group-finance-manager-portal',
         },
         {
-          name: 'ERP case studies',
-          slug: 'erp-case-studies',
-          description:
-            'Write-ups of the seven applications above: the problem each one solved, how it connects to SAP, and the results.',
-          stack: ['SAP Business One', 'SAP HANA', 'Service Layer'],
+          name: 'Operations and Finance Monitoring Platform',
+          client: 'Airport transport company',
+          summary: '20 role-based workspaces in Arabic and English, fed by SAP Business One and SAP Customer Checkout.',
+          caseStudy: 'operations-and-finance-monitoring-platform',
         },
         {
-          name: 'This website',
-          slug: 'mohammedjawoad-portfolio',
-          description:
-            'The source of this site: React and TypeScript with a WebGL2 particle engine, in English and Arabic, with light and dark themes.',
-          stack: ['React', 'TypeScript', 'WebGL2'],
+          name: 'AP Payment Approval Portal',
+          client: 'Pharmaceutical company',
+          summary: 'Supplier payments approved on mobile and traced to the SAP outgoing payment.',
+          caseStudy: 'ap-payment-approval-portal',
+        },
+        {
+          name: 'Finance Posting Portal',
+          client: 'Car rental company',
+          summary: 'Journal entries, payments, transfers and commissions posted straight to SAP.',
+          caseStudy: 'finance-posting-portal',
+        },
+        {
+          name: 'Vehicle Accident Memo Workflow',
+          client: 'Fleet team',
+          summary: 'Drivers submit, managers approve, and each memo is stored with its SAP attachments.',
+          caseStudy: 'vehicle-accident-memo-workflow',
+        },
+        {
+          name: 'Sales and Invoice Reporting Portal',
+          client: 'Sales team',
+          summary: 'Sales and invoice reports with Crystal Reports, Excel and PDF export.',
+          caseStudy: 'sales-and-invoice-reporting-portal',
+        },
+        {
+          name: 'Smart Enterprise Workspace',
+          client: 'Pharmaceutical company',
+          summary: 'Planning, production, finance and approvals in one Arabic-first workspace, with smart notifications.',
+          caseStudy: 'smart-enterprise-workspace',
         },
       ],
     },

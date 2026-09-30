@@ -39,12 +39,13 @@ export interface Project {
   caseStudy?: string
 }
 
-export interface Repo {
+/** One of the seven applications, linked to its write-up in the erp-case-studies repository. */
+export interface GitHubProject {
   name: string
-  /** Repository name under the GitHub account in site.config.ts. */
-  slug: string
-  description: string
-  stack: string[]
+  client: string
+  summary: string
+  /** Heading anchor in the erp-case-studies README. */
+  caseStudy: string
 }
 
 export interface Role {
@@ -116,8 +117,10 @@ export interface Content {
     github: {
       title: string
       intro: string
-      profile: string
-      repos: Repo[]
+      readLink: string
+      all: string
+      allAction: string
+      items: GitHubProject[]
     }
   }
   process: {

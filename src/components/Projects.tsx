@@ -161,66 +161,71 @@ export function Projects() {
             />
           ))}
         </div>
-        <GitHubRepos />
+        <GitHubProjects />
       </div>
     </section>
   )
 }
 
-/** Public repositories: the code that can be shared, next to the private work above. */
-function GitHubRepos() {
+/** The seven applications, each linked to its write-up on GitHub; the code itself stays private. */
+function GitHubProjects() {
   const { t } = useI18n()
   const g = t.projects.github
   return (
     <div className="mt-24 md:mt-32">
-      <Reveal className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-        <div>
-          <h3 className="t-h3 flex items-center gap-3">
-            <GitHubIcon className="size-6 flex-none text-bone" />
-            {g.title}
-          </h3>
-          <p className="mt-3 max-w-2xl text-mist">{g.intro}</p>
-        </div>
-        <a
-          href={site.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-ghost min-h-11 px-4 text-[0.925rem]"
-        >
-          {g.profile}
-        </a>
+      <Reveal>
+        <h3 className="t-h3 flex items-center gap-3">
+          <GitHubIcon className="size-6 flex-none text-bone" />
+          {g.title}
+        </h3>
+        <p className="mt-3 max-w-2xl text-mist">{g.intro}</p>
       </Reveal>
-      <ul className="mt-8 grid gap-5 md:grid-cols-3">
-        {g.repos.map((repo, i) => (
-          <li key={repo.slug}>
-            <Reveal className="h-full" delay={0.06 * i}>
+      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {g.items.map((item, i) => (
+          <li key={item.caseStudy}>
+            <Reveal className="h-full" delay={0.05 * (i % 4)}>
               <a
-                href={`${site.github}/${repo.slug}`}
+                href={`${site.caseStudies}#${item.caseStudy}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="panel project-card group flex h-full flex-col rounded-2xl p-6 transition-shadow duration-300 hover:shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.5)]"
               >
-                <span className="flex items-start justify-between gap-4">
-                  <span className="text-[1.15rem] font-semibold leading-snug text-bone [font-stretch:108%] rtl:[font-stretch:100%]">
-                    {repo.name}
-                  </span>
-                  <GitHubIcon className="mt-1 size-[1.1rem] flex-none text-mist transition-colors group-hover:text-accent" />
+                <span className="block text-[0.85rem] text-mist">{item.client}</span>
+                <span className="mt-2 block text-balance text-[1.1rem] font-semibold leading-snug text-bone [font-stretch:106%] rtl:[font-stretch:100%]">
+                  {item.name}
                 </span>
-                <span dir="ltr" className="mt-1 block text-[0.85rem] text-mist/80 rtl:text-end">
-                  {repo.slug}
-                </span>
-                <span className="mt-4 block text-[0.95rem] text-mist">{repo.description}</span>
-                <span className="mt-auto flex flex-wrap gap-2 pt-6" dir="ltr">
-                  {repo.stack.map((tech) => (
-                    <span key={tech} className="chip">
-                      {tech}
-                    </span>
-                  ))}
+                <span className="mt-3 block text-[0.95rem] text-mist">{item.summary}</span>
+                <span className="mt-auto flex items-center gap-2 pt-6 text-[0.9rem] text-accent-soft transition-colors group-hover:text-bone">
+                  <GitHubIcon className="size-4 flex-none" />
+                  {g.readLink}
                 </span>
               </a>
             </Reveal>
           </li>
         ))}
+        <li>
+          <Reveal className="h-full" delay={0.15}>
+            <a
+              href={site.caseStudies}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="panel project-card group flex h-full flex-col justify-between gap-6 rounded-2xl p-6 shadow-[inset_0_0_0_1px_rgb(var(--accent-rgb)/0.55)]"
+              style={{
+                background:
+                  'linear-gradient(160deg, rgb(var(--accent-rgb) / 0.16), transparent 65%), linear-gradient(180deg, var(--card-from), var(--card-to))',
+              }}
+            >
+              <GitHubIcon className="size-8 text-accent" />
+              <span>
+                <span className="block text-[1.1rem] font-semibold leading-snug text-bone">{g.all}</span>
+                <span dir="ltr" className="mt-1 block text-[0.85rem] text-mist rtl:text-end">
+                  erp-case-studies
+                </span>
+              </span>
+              <span className="btn btn-primary min-h-11 self-start px-4 text-[0.925rem]">{g.allAction}</span>
+            </a>
+          </Reveal>
+        </li>
       </ul>
     </div>
   )
