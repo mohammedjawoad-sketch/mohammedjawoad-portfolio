@@ -5,3 +5,6 @@ dist
 
 # CV source and working PDF stay local; `npm run cv:pdf` publishes the PDF to public/.
 cv/
+
+# Blender renders (rebuild with art/core/render_core.py)
+art/renders/

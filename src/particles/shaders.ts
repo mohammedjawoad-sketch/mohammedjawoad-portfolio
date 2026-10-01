@@ -35,7 +35,7 @@ uniform float uIntensity;
 uniform float uGridCols;
 uniform float uCount;
 uniform float uFocus;
-uniform vec3 uPal[4];
+uniform vec3 uPal[5];
 uniform float uInk;
 uniform vec2 uHalf;
 uniform float uScroll;
@@ -47,11 +47,13 @@ const COMMON = /* glsl */ `
 const float PI = 3.14159265;
 const float TAU = 6.28318531;
 
-// Palette slots, filled per theme by ParticleField (WHITE is the emphasis colour).
+// Palette slots, filled per theme by ParticleField (WHITE is the emphasis colour;
+// GOLD, used sparingly, is the warm heat at the centre of the hub and the Core).
 #define WHITE  uPal[0]
 #define VIOLET uPal[1]
 #define CYAN   uPal[2]
 #define BLUE   uPal[3]
+#define GOLD   uPal[4]
 
 mat3 rotX(float a) { float c = cos(a), s = sin(a); return mat3(1.0, 0.0, 0.0, 0.0, c, s, 0.0, -s, c); }
 mat3 rotY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c); }
@@ -320,7 +322,7 @@ vec3 hub(vec4 a, vec4 b, float t, out vec4 col) {
   vec3 p;
   if (a.w < 0.2) {
     p = g * 0.36;
-    col = vec4(mix(VIOLET, WHITE, clamp(length(g) * 0.25, 0.0, 1.0)), 1.0);
+    col = vec4(mix(GOLD, WHITE, clamp(length(g) * 0.3, 0.0, 1.0)), 1.0);
   } else if (a.w < 0.46) {
     p = node + g * 0.15;
     col = vec4(mix(CYAN, WHITE, step(0.9, b.w) * 0.8), 1.0);
@@ -328,7 +330,9 @@ vec3 hub(vec4 a, vec4 b, float t, out vec4 col) {
     float ph = fract(a.y + t * (0.14 + 0.1 * b.x));
     vec3 ctrl = node * 0.45 + vec3(0.0, 1.1 + 0.4 * b.z, 0.0);
     p = mix(mix(node, ctrl, ph), mix(ctrl, vec3(0.0), ph), ph) + g * 0.035;
-    col = vec4(mix(CYAN, VIOLET, smoothstep(0.35, 1.0, ph)), smoothstep(0.0, 0.08, ph) * smoothstep(1.0, 0.9, ph));
+    // Cool at the source, warming to gold as it reaches the core.
+    vec3 stream = mix(mix(CYAN, VIOLET, smoothstep(0.3, 0.75, ph)), GOLD, smoothstep(0.75, 1.0, ph));
+    col = vec4(stream, smoothstep(0.0, 0.08, ph) * smoothstep(1.0, 0.9, ph));
   } else {
     float ang = a.y * TAU + t * 0.06;
     p = vec3(cos(ang) * 3.25, 0.0, sin(ang) * 3.25) + g * 0.02;
@@ -703,5 +707,175 @@ void main() {
   d.x *= uAspect;
   float g = exp(-dot(d, d) * 5.0) * uGlow * 0.14;
   outColor = vec4(b.rgb + vec3(0.3, 0.45, 1.0) * g, min(1.0, b.a + g));
+}
+`
+
+// ---------- The Core: the modeled centrepiece (art/core/build_core.py, drawn by core.ts)
+// Glass facets with a bright rim and moving glints, a warm heart, and glowing
+// edges. Light on the dark page; in the light theme, ink: pale glass and dark edges.
+
+const CORE_COMMON = /* glsl */ `
+uniform vec3 uPal[5];
+uniform float uInk;
+uniform float uTime;
+uniform float uAlpha;
+
+#define WHITE  uPal[0]
+#define VIOLET uPal[1]
+#define CYAN   uPal[2]
+#define BLUE   uPal[3]
+#define GOLD   uPal[4]
+
+// The same scanner band as the particles, in the formation's own units.
+float scanAt(float y, float t) {
+  float s = mod(t * 0.42, 11.0) - 5.5;
+  return exp(-pow((y - s) * 3.2, 2.0));
+}
+`
+
+const CORE_SPACE = /* glsl */ `
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+uniform vec3 uOffset;
+uniform float uScale;
+`
+
+export const CORE_MESH_VERT = /* glsl */ `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+${CORE_SPACE}
+
+out vec3 vNormal;
+out vec3 vViewPos;
+out float vFormY;
+
+void main() {
+  vec4 world = uModel * vec4(aPos, 1.0);
+  vec4 view = uView * world;
+  vNormal = mat3(uView) * (mat3(uModel) * aNormal);
+  vViewPos = view.xyz;
+  vFormY = (world.y - uOffset.y) / uScale;
+  gl_Position = uProj * view;
+}
+`
+
+export const CORE_MESH_FRAG = /* glsl */ `#version 300 es
+precision highp float;
+
+in vec3 vNormal;
+in vec3 vViewPos;
+in float vFormY;
+${CORE_COMMON}
+uniform int uKind;   // 0 crystal shell, 1 heart, 2 module
+uniform vec3 uTint;
+out vec4 outColor;
+
+void main() {
+  vec3 N = normalize(vNormal);
+  vec3 V = normalize(-vViewPos);
+  bool front = gl_FrontFacing;
+  if (!front) N = -N;
+  float ndv = clamp(dot(N, V), 0.0, 1.0);
+  float rim = pow(1.0 - ndv, 2.4);
+  float t = uTime;
+  vec3 col;
+  float a;
+
+  if (uKind == 1) {
+    // The heart: warm light, whiter where it faces you, breathing slowly.
+    // As ink: a bronze bead with a paler centre.
+    float glow = pow(ndv, 1.6);
+    float breath = 0.82 + 0.1 * sin(t * 1.9);
+    vec3 light = mix(GOLD * 0.85, mix(GOLD, vec3(1.0), 0.55), glow * glow) * breath;
+    // As ink the bead is shaded like a sphere: darker toward its rim, pale where it faces you.
+    vec3 bead = mix(GOLD * (1.0 - rim * 0.45), mix(GOLD, vec3(1.0), 0.45), glow * glow * 0.8);
+    col = mix(light, bead, uInk);
+    a = mix(mix(0.12, 0.62, glow), mix(0.35, 1.0, glow), uInk);
+  } else {
+    // Glass: each facet catches a different part of a cool gradient, the rim
+    // brightens toward the silhouette, and two moving lights glint off the faces.
+    vec3 L1 = normalize(vec3(cos(t * 0.37), 0.55, sin(t * 0.37)));
+    vec3 L2 = normalize(vec3(-sin(t * 0.23), -0.35, cos(t * 0.23)));
+    float spec = pow(max(dot(N, normalize(L1 + V)), 0.0), 70.0)
+               + 0.55 * pow(max(dot(N, normalize(L2 + V)), 0.0), 36.0);
+    vec3 env = mix(BLUE, CYAN, 0.5 + 0.5 * N.y);
+    env = mix(env, VIOLET, smoothstep(0.1, 0.95, N.x) * 0.55);
+    vec3 base = uKind == 2 ? uTint : env;
+    float scan = scanAt(vFormY, t);
+
+    col = base * (0.16 + 0.3 * (1.0 - ndv)) + mix(CYAN, WHITE, 0.45) * rim * 0.95 + WHITE * spec;
+    col = mix(col, WHITE, scan * 0.35);
+    a = 0.08 + rim * 0.5 + spec * 0.6 + scan * 0.12;
+    if (!front) {
+      col *= 0.4;
+      a *= 0.45;
+    }
+    // Ink: pale tinted glass on paper; the edges carry the drawing.
+    col = mix(col, base * 0.9, uInk);
+    a = mix(a, (0.05 + rim * 0.22) * (front ? 1.0 : 0.6), uInk);
+  }
+
+  a = clamp(a * uAlpha, 0.0, 1.0);
+  outColor = vec4(col * a, a);
+}
+`
+
+export const CORE_LINE_VERT = /* glsl */ `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in float aU;
+${CORE_SPACE}
+
+out float vU;
+out float vFormY;
+out float vDepth;
+
+void main() {
+  vec4 world = uModel * vec4(aPos, 1.0);
+  vec4 view = uView * world;
+  vU = aU;
+  vFormY = (world.y - uOffset.y) / uScale;
+  vDepth = -view.z;
+  gl_Position = uProj * view;
+}
+`
+
+export const CORE_LINE_FRAG = /* glsl */ `#version 300 es
+precision highp float;
+
+in float vU;
+in float vFormY;
+in float vDepth;
+${CORE_COMMON}
+uniform vec3 uColor;
+uniform int uStyle;     // 0 solid, 1 pulses running into the heart, 2 dashed ring
+uniform float uPhase;
+uniform float uDashes;
+out vec4 outColor;
+
+void main() {
+  float a = uAlpha;
+  vec3 col = uColor;
+  if (uStyle == 1) {
+    // aU runs from the module (0) to the heart (1); pulses warm as they arrive.
+    float head = fract(uTime * 0.32 + uPhase);
+    float d = vU - head;
+    float pulse = exp(-d * d * 260.0);
+    col = mix(col, mix(GOLD, WHITE, 0.35 * (1.0 - uInk)), pulse * smoothstep(0.2, 1.0, vU));
+    a *= 0.22 + 1.5 * pulse;
+  } else if (uStyle == 2) {
+    a *= mix(0.15, 1.0, step(0.45, fract(vU * uDashes)));
+  }
+  float scan = scanAt(vFormY, uTime) * (1.0 - uInk);
+  col = mix(col, WHITE, scan * 0.5);
+  a *= 1.0 + scan * 1.2;
+  // The far side of a ring dims, like the particles' fog.
+  a *= mix(1.0, 0.45, smoothstep(9.0, 12.0, vDepth));
+  a = min(a, 1.0);
+  outColor = vec4(col * a, a);
 }
 `

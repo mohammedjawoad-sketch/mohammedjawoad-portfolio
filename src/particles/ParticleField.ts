@@ -8,6 +8,8 @@ import {
   PARTICLE_VERT,
   STREAK_VERT,
 } from './shaders'
+import { CoreRenderer, loadCoreModel, type CoreFrame, type CoreMesh } from './core'
+import { link, locate, type Locations } from './gl'
 
 export const FORMATIONS = 5
 
@@ -29,13 +31,16 @@ export interface FieldOptions {
   light?: boolean
 }
 
-// WHITE (emphasis), VIOLET, CYAN, BLUE, in the order shaders.ts reads uPal.
+// WHITE (emphasis), VIOLET, CYAN, BLUE, GOLD, in the order shaders.ts reads uPal.
 const PALETTES = {
-  // Coloured light on a night sky.
-  dark: new Float32Array([1, 1, 1, 0.72, 0.6, 1.0, 0.3, 0.86, 1.0, 0.32, 0.48, 1.0]),
-  // Blue ink on paper: emphasis becomes the deepest ink rather than white.
-  light: new Float32Array([0.05, 0.09, 0.36, 0.42, 0.26, 0.9, 0.02, 0.48, 0.64, 0.14, 0.28, 0.79]),
+  // Coloured light on a night sky, with warm gold at the cores.
+  dark: new Float32Array([1, 1, 1, 0.72, 0.6, 1.0, 0.3, 0.86, 1.0, 0.32, 0.48, 1.0, 1.0, 0.71, 0.28]),
+  // Blue ink on paper: emphasis becomes the deepest ink rather than white; gold becomes bronze.
+  light: new Float32Array([0.05, 0.09, 0.36, 0.42, 0.26, 0.9, 0.02, 0.48, 0.64, 0.14, 0.28, 0.79, 0.64, 0.36, 0.0]),
 }
+
+// The modeled centrepiece (art/core/build_core.py).
+const CORE_MODEL = `${import.meta.env.BASE_URL}models/core.glb`
 
 interface Target {
   tex: WebGLTexture
@@ -71,7 +76,6 @@ const PARTICLE_ONLY = ['uScatter', 'uPixel', 'uMaxPoint'] as const
 
 type SharedUniform = (typeof SHARED_UNIFORMS)[number]
 type ParticleUniform = SharedUniform | (typeof PARTICLE_ONLY)[number]
-type Locations<K extends string> = Record<K, WebGLUniformLocation | null>
 
 // Must match the constants in shaders.ts.
 const NET_N = 420
@@ -97,41 +101,6 @@ function perspective(out: Float32Array, fovy: number, aspect: number, near: numb
   out[10] = (far + near) * nf
   out[11] = -1
   out[14] = 2 * far * near * nf
-}
-
-function compile(gl: WebGL2RenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type)
-  if (!shader) throw new Error('Could not create shader')
-  gl.shaderSource(shader, source)
-  gl.compileShader(shader)
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log = gl.getShaderInfoLog(shader)
-    gl.deleteShader(shader)
-    throw new Error(`Shader compile failed: ${log}`)
-  }
-  return shader
-}
-
-function link(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
-  const vs = compile(gl, gl.VERTEX_SHADER, vertex)
-  const fs = compile(gl, gl.FRAGMENT_SHADER, fragment)
-  const program = gl.createProgram()
-  if (!program) throw new Error('Could not create program')
-  gl.attachShader(program, vs)
-  gl.attachShader(program, fs)
-  gl.linkProgram(program)
-  gl.deleteShader(vs)
-  gl.deleteShader(fs)
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(`Program link failed: ${gl.getProgramInfoLog(program)}`)
-  }
-  return program
-}
-
-function locate<K extends string>(gl: WebGL2RenderingContext, program: WebGLProgram, names: readonly K[]) {
-  const out = {} as Locations<K>
-  for (const name of names) out[name] = gl.getUniformLocation(program, name)
-  return out
 }
 
 /** Segment ends for every formation's hairline connections: (formation, a, b, end) + (c). */
@@ -196,6 +165,10 @@ export class ParticleField {
   private bloomA: Target | null = null
   private bloomB: Target | null = null
   private bloom = true
+  private core: CoreRenderer | null = null
+  private coreMeshes: Map<string, CoreMesh> | null = null
+  private coreFade = 0
+  private destroyed = false
   private ink = 0
   private palette = PALETTES.dark
   private lineVertexCount = 0
@@ -257,11 +230,25 @@ export class ParticleField {
     canvas.addEventListener('webglcontextrestored', this.onContextRestored)
     this.setup()
     this.resize()
+    void this.loadCore()
+  }
+
+  /** The Core arrives a moment after the particles and fades in; without it the page carries on as before. */
+  private async loadCore() {
+    try {
+      const meshes = await loadCoreModel(CORE_MODEL)
+      if (this.destroyed) return
+      this.coreMeshes = meshes
+      this.core = new CoreRenderer(this.gl, meshes)
+    } catch (error) {
+      console.warn('[core] not shown:', error)
+    }
   }
 
   private onContextLost = (event: Event) => {
     event.preventDefault()
     this.stop()
+    this.core = null
   }
 
   private onContextRestored = () => {
@@ -269,6 +256,7 @@ export class ParticleField {
     this.bloomB = null
     this.setup()
     this.resize()
+    if (this.coreMeshes) this.core = new CoreRenderer(this.gl, this.coreMeshes)
     this.start()
   }
 
@@ -482,7 +470,10 @@ export class ParticleField {
   }
 
   destroy() {
+    this.destroyed = true
     this.stop()
+    this.core?.destroy()
+    this.core = null
     this.canvas.removeEventListener('webglcontextlost', this.onContextLost)
     this.canvas.removeEventListener('webglcontextrestored', this.onContextRestored)
     const gl = this.gl
@@ -582,6 +573,7 @@ export class ParticleField {
     s.vel = sc.velocity * world * scrollOn
     s.yaw = sc.value * SCROLL_TURN * scrollOn
     s.pitch = Math.sin(sc.value * 0.6) * 0.12 * scrollOn
+    if (this.core) this.coreFade = Math.min(1, this.coreFade + dt / 1.4)
 
     this.draw()
   }
@@ -638,6 +630,45 @@ export class ParticleField {
       gl.bindVertexArray(this.streakVao)
       gl.drawArraysInstanced(gl.LINES, 0, 2, this.dustCount)
     }
+    if (this.core) this.core.draw(this.coreFrame())
+  }
+
+  private readonly coreState: CoreFrame = {
+    proj: this.proj,
+    cameraZ: CAMERA_Z,
+    tiltX: 0,
+    tiltY: 0,
+    time: 0,
+    weights: this.weights,
+    offsetX: 0,
+    offsetY: 0,
+    offsetZ: 0,
+    scale: 1,
+    yaw: 0,
+    pitch: 0,
+    palette: this.palette,
+    ink: 0,
+    visibility: 0,
+  }
+
+  private coreFrame() {
+    const c = this.coreState
+    const s = this.frameState
+    c.tiltX = this.tilt.x
+    c.tiltY = this.tilt.y
+    c.time = this.time
+    c.offsetX = s.ox
+    c.offsetY = s.oy
+    c.offsetZ = s.oz
+    c.scale = s.scale
+    c.yaw = s.yaw
+    c.pitch = s.pitch
+    c.palette = this.palette
+    c.ink = this.ink
+    // Ease in: the first moments of the fade are slow, so the Core materialises rather than pops.
+    // Same emphasis as the formation it sits in, so it stays quieter behind text on small screens.
+    c.visibility = this.coreFade * this.coreFade * (3 - 2 * this.coreFade) * this.intro * Math.min(1, s.intensity / 0.9)
+    return c
   }
 
   private draw() {

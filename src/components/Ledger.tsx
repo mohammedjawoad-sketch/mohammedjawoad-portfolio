@@ -94,7 +94,7 @@ export function Ledger() {
                 transition={{ duration: 0.8, delay: ledger.rows.length * stagger, ease }}
               >
                 <dt className="ledger-label font-semibold text-bone">{ledger.total.label}</dt>
-                <dd className="text-[1.45rem] font-bold text-accent">
+                <dd className="text-[1.45rem] font-bold text-gold">
                   <Figure row={ledger.total} run={inView} delay={ledger.rows.length * stagger + 0.2} />
                 </dd>
               </motion.div>
